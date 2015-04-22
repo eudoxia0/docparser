@@ -142,40 +142,45 @@
 
 (defun load-system (system-name)
   "Load an ASDF system by name."
-  (asdf:load-system system-name :verbose nil :force t))
+  (uiop:with-muffled-loader-conditions ()
+    (uiop:with-muffled-compiler-conditions ()
+      (asdf:load-system system-name :verbose nil :force t))))
 
 (defparameter *parsers* (list)
   "A list of symbols to the functions used to parse their corresponding forms.")
 
 (defmacro define-parser (name (form) &body body)
   "Define a parser."
-  `(assoc (cons ',name (lambda (,form)
-                         ,@body))
-          *parsers*))
+  `(push (cons ',name (lambda (,form)
+                        ,@body))
+         *parsers*))
 
 (defun parse-form (form)
   "Parse a form into a node."
   (when (listp form)
     (let ((parser (rest (assoc (first form) *parsers*))))
       (when parser
-        (apply parser (rest form))))))
+        (funcall parser (rest form))))))
 
 (defun parse (system-name)
   (let* ((nodes (list))
          (old-macroexpander *macroexpand-hook*)
-         (*macroexpand-hook* #'(lambda (function form environment)
-                                 (let ((parsed (parse-form form)))
-                                   (if parsed
-                                       (push parsed nodes)
-                                       (funcall old-macroexpander
-                                                function
-                                                form
-                                                environment))))))
+         (*macroexpand-hook*
+           #'(lambda (function form environment)
+               (let ((parsed (parse-form form)))
+                 (if parsed
+                     (progn
+                       (push parsed nodes)
+                       `(identity t))
+                     (funcall old-macroexpander
+                              function
+                              form
+                              environment))))))
     (load-system system-name)
     nodes))
 
 ;;; Parsers
 
 (define-parser cl:defun (form)
-  (destructuring-bind (name (&rest args) docstring &body body) form
+  (destructuring-bind (name (&rest args) &rest body) form
     t))
