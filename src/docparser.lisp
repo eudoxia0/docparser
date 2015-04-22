@@ -5,6 +5,21 @@
                 :proper-list)
   (:import-from :alexandria
                 :destructuring-case)
+  ;; Classes
+  (:export :symbol-node
+           :documentation-node
+           :operator-node
+           :function-node
+           :macro-node
+           :generic-function-node
+           :method-node
+           :variable-node
+           :slot-node
+           :record-node
+           :struct-node
+           :class-node
+           :type-node)
+  ;; Interface
   (:export :parse)
   (:documentation "Parse documentation from ASDF systems."))
 (in-package :docparser)
@@ -136,13 +151,13 @@
 
 (defmethod print-object ((symbol symbol-node) stream)
   "Print a symbol node."
-  (print-unreadable-object (symbol stream :type t)
-    (write-string (render-full-symbol symbol) stream)))
+  (print-unreadable-object (symbol stream)
+    (format stream "symbol ~A" (render-full-symbol symbol))))
 
 (defmethod print-object ((operator operator-node) stream)
   "Print an operator node."
-  (print-unreadable-object (operator stream :type t)
-    (format stream "~A ~A"
+  (print-unreadable-object (operator stream)
+    (format stream "function ~A ~A"
             (let ((name (node-name operator)))
               (if (symbol-setf-p name)
                   (format nil "(setf ~A)" (render-humanize name))
