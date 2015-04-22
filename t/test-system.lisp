@@ -20,10 +20,12 @@
 
 (defun func (a b &optional (c "") (l 1))
   "docstring"
+  (declare (ignore a b c l))
   t)
 
 (defmacro mac (a b c)
   "docstring"
+  (declare (ignore a b c))
   t)
 
 (defstruct rec1
@@ -52,4 +54,5 @@
 
 (defmethod test-method ((tc test-class) a)
   "docstring"
+  (declare (ignore tc a))
   t)
