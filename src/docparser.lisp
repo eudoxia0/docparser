@@ -30,8 +30,11 @@
   (:export :slot-name
            :slot-accessors
            :slot-readers
-           :slot-writers)
+           :slot-writers
+           :slot-type
+           :slot-allocation)
   (:export :record-slots)
+  (:export :class-node-superclasses)
   ;; Interface
   (:export :parse)
   (:documentation "Parse documentation from ASDF systems."))
@@ -111,7 +114,15 @@
    (writers :reader slot-writers
             :initarg :writers
             :initform nil
-            :type (proper-list symbol-node)))
+            :type (proper-list symbol-node))
+   (type :reader slot-type
+         :initarg :type
+         :documentation "The slot's type.")
+   (allocation :reader slot-allocation
+               :initarg :allocation
+               :initform :instance
+               :type keyword
+               :documentation "The slot's allocation type."))
   (:documentation "A class or structure slot."))
 
 (defclass record-node (documentation-node)
@@ -125,7 +136,10 @@
   (:documentation "A structure."))
 
 (defclass class-node (record-node)
-  ()
+  ((superclasses :reader class-node-superclasses
+                 :initarg :superclasses
+                 :type (proper-list symbol)
+                 :documentation "A list of the class's superclasses (symbols)."))
   (:documentation "A class."))
 
 (defclass type-node (operator-node)
@@ -222,6 +236,7 @@
         (funcall parser (rest form))))))
 
 (defun parse (system-name)
+  "Parse documentation from a system."
   (let* ((nodes (list))
          (old-macroexpander *macroexpand-hook*)
          (*macroexpand-hook*
@@ -266,6 +281,7 @@
                      :lambda-list args))))
 
 (define-parser cl:defgeneric (form)
+  (declare (ignore form))
   t)
 
 (define-parser cl:defmethod (form)
@@ -303,3 +319,37 @@
                      :name (symbol-node-from-symbol name)
                      :docstring docstring
                      :lambda-list lambda-list))))
+
+(defun parse-slot (slot)
+  (flet ((extract-all-and-delete (key)
+           (let ((out (list)))
+             (loop while (getf (rest slot) key) do
+               (push (getf (rest slot) key) out)
+               (remf (rest slot) ley))))
+         (list->symbols (list)
+           (loop for fn in list collecting
+             (symbol-node-from-symbol fn))))
+    (let ((accessors (extract-all-and-delete :accessor))
+          (readers (extract-all-and-delete :reader))
+          (writers (extract-all-and-delete :writer)))
+      (destructuring-bind (name &key type allocation documentation)
+          (make-instance 'slot-node
+                         :name (symbol-node-from-symbol name)
+                         :docstring docstring
+                         :type type
+                         :allocation allocation
+                         :accessors (list->symbols accessors)
+                         :readers (list->symbols readers)
+                         :writers (list->symbols writers))))))
+
+
+(define-parser cl:defclass (form)
+  (destructuring-bind (name superclasses slots &rest options) form
+    (let ((docstring (second (find :documentation options :key #'first))))
+      (make-instance 'class-node
+                     :name (symbol-node-from-symbol name)
+                     :superclasses (loop for class in superclasses collecting
+                                     (symbol-node-from-symbol name))
+                     :slots (loop for slot in slots collecting
+                              (parse-slot slot))
+                     :docstring docstring))))
