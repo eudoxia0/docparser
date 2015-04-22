@@ -242,14 +242,12 @@
          (*macroexpand-hook*
            #'(lambda (function form environment)
                (let ((parsed (parse-form form)))
-                 (if parsed
-                     (progn
-                       (push parsed nodes)
-                       `(identity t))
-                     (funcall old-macroexpander
-                              function
-                              form
-                              environment))))))
+                 (when parsed
+                   (push parsed nodes))
+                 (funcall old-macroexpander
+                          function
+                          form
+                          environment)))))
     (load-system system-name)
     nodes))
 
@@ -333,7 +331,11 @@
       (let ((accessors (extract-all-and-delete :accessor))
             (readers (extract-all-and-delete :reader))
             (writers (extract-all-and-delete :writer)))
-        (destructuring-bind (name &key type allocation documentation) slot
+        (destructuring-bind (name &key initarg initform type
+                                    (allocation :instance)
+                                    documentation)
+            slot
+          (declare (ignore initarg initform))
           (make-instance 'slot-node
                          :name (symbol-node-from-symbol name)
                          :docstring documentation
