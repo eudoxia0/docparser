@@ -27,7 +27,8 @@
   (:export :node-name
            :node-docstring)
   (:export :operator-lambda-list)
-  (:export :slot-accessors
+  (:export :slot-name
+           :slot-accessors
            :slot-readers
            :slot-writers)
   (:export :record-slots)
@@ -96,7 +97,10 @@
   (:documentation "A variable."))
 
 (defclass slot-node (documentation-node)
-  ((accessors :reader slot-accessors
+  ((name :reader slot-name
+         :initarg :name
+         :type symbol-node)
+   (accessors :reader slot-accessors
               :initarg :accessors
               :initform nil
               :type (proper-list symbol-node))
