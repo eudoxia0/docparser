@@ -162,9 +162,15 @@
 
 (defun parse (system-name)
   (let* ((nodes (list))
+         (old-macroexpander *macroexpand-hook*)
          (*macroexpand-hook* #'(lambda (function form environment)
-                                 (declare (ignore function environment))
-                                 (push (parse-form form) nodes))))
+                                 (let ((parsed (parse-form form)))
+                                   (if parsed
+                                       (push parsed nodes)
+                                       (funcall old-macroexpander
+                                                function
+                                                form
+                                                environment))))))
     (load-system system-name)
     nodes))
 
