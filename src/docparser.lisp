@@ -19,6 +19,18 @@
            :struct-node
            :class-node
            :type-node)
+  ;; Accessors
+  (:export :symbol-node-package
+           :symbol-node-name
+           :symbol-external-p
+           :symbol-setf-p)
+  (:export :node-name
+           :node-docstring)
+  (:export :operator-lambda-list)
+  (:export :slot-accessors
+           :slot-readers
+           :slot-writers)
+  (:export :record-slots)
   ;; Interface
   (:export :parse)
   (:documentation "Parse documentation from ASDF systems."))
