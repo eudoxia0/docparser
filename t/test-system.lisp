@@ -56,3 +56,8 @@
   "docstring"
   (declare (ignore tc a))
   t)
+
+(defmacro indirectly-define-function ()
+  `(defun hidden-function () t))
+
+(indirectly-define-function)
