@@ -39,6 +39,10 @@
   struct-slot-a
   struct-slot-b)
 
+(deftype custom-string (val)
+  "A type"
+  (string= val "my-string"))
+
 (defclass test-class ()
   ((first-slot :accessor first-slot
                :initarg :first-slot
