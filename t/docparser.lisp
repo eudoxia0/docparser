@@ -10,6 +10,7 @@
 (test parsing
   (let ((out))
     (finishes
-     (setf out (docparser:parse :docparser-test-system)))))
+     (setf out (docparser:parse :docparser-test-system)))
+    (print out)))
 
 (run! 'tests)

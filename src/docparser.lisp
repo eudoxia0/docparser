@@ -175,6 +175,11 @@
   (print-unreadable-object (var stream)
     (format stream "variable ~A" (render-humanize (node-name var)))))
 
+(defmethod print-object ((type type-node) stream)
+  "Print a type definition node."
+  (print-unreadable-object (type stream)
+    (format stream "type ~A" (render-humanize (node-name type)))))
+
 
 ;;; Parsing
 
@@ -271,3 +276,14 @@
 
 (define-parser cl:defparameter (form) (parse-var form))
 (define-parser cl:defvar (form) (parse-var form))
+(define-parser cl:defconstant (form) (parse-var form))
+
+(define-parser cl:deftype (form)
+  (destructuring-bind (name lambda-list &rest body) form
+    (let ((docstring (if (stringp (first body))
+                         (first body)
+                         nil)))
+      (make-instance 'type-node
+                     :name (symbol-node-from-symbol name)
+                     :docstring docstring
+                     :lambda-list lambda-list))))
