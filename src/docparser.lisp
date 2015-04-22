@@ -157,7 +157,13 @@
 (defmethod print-object ((operator operator-node) stream)
   "Print an operator node."
   (print-unreadable-object (operator stream)
-    (format stream "function ~A ~A"
+    (format stream "~A ~A ~A"
+            (typecase operator
+              (function-node "function")
+              (macro-node "macro")
+              (generic-function-node "generic function")
+              (method "method")
+              (t "operator"))
             (let ((name (node-name operator)))
               (if (symbol-setf-p name)
                   (format nil "(setf ~A)" (render-humanize name))
@@ -213,6 +219,34 @@
                          (first body)
                          nil)))
       (make-instance 'function-node
+                     :name (if (listp name)
+                               ;; SETF name
+                               (symbol-node-from-symbol (second name)
+                                                        :setf t)
+                               ;; Regular name
+                               (symbol-node-from-symbol name))
+                     :docstring docstring
+                     :lambda-list args))))
+
+(define-parser cl:defmacro (form)
+  (destructuring-bind (name (&rest args) &rest body) form
+    (let ((docstring (if (stringp (first body))
+                         (first body)
+                         nil)))
+      (make-instance 'macro-node
+                     :name (symbol-node-from-symbol name)
+                     :docstring docstring
+                     :lambda-list args))))
+
+(define-parser cl:defgeneric (form)
+  t)
+
+(define-parser cl:defmethod (form)
+  (destructuring-bind (name (&rest args) &rest body) form
+    (let ((docstring (if (stringp (first body))
+                         (first body)
+                         nil)))
+      (make-instance 'method-node
                      :name (if (listp name)
                                ;; SETF name
                                (symbol-node-from-symbol (second name)
