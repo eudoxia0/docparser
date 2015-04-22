@@ -152,7 +152,7 @@
 (defmethod print-object ((symbol symbol-node) stream)
   "Print a symbol node."
   (print-unreadable-object (symbol stream)
-    (format stream "symbol ~A" (render-full-symbol symbol))))
+    (format stream "symbol ~A" (render-humanize symbol))))
 
 (defmethod print-object ((operator operator-node) stream)
   "Print an operator node."
@@ -162,13 +162,19 @@
               (function-node "function")
               (macro-node "macro")
               (generic-function-node "generic function")
-              (method "method")
+              (method-node "method")
               (t "operator"))
             (let ((name (node-name operator)))
               (if (symbol-setf-p name)
                   (format nil "(setf ~A)" (render-humanize name))
                   (render-humanize name)))
             (operator-lambda-list operator))))
+
+(defmethod print-object ((var variable-node) stream)
+  "Print a variable node."
+  (print-unreadable-object (var stream)
+    (format stream "variable ~A" (render-humanize (node-name var)))))
+
 
 ;;; Parsing
 
@@ -255,3 +261,13 @@
                                (symbol-node-from-symbol name))
                      :docstring docstring
                      :lambda-list args))))
+
+(defun parse-var (form)
+  (destructuring-bind (name &optional initial-value docstring) form
+    (declare (ignore initial-value))
+    (make-instance 'variable-node
+                   :name (symbol-node-from-symbol name)
+                   :docstring docstring)))
+
+(define-parser cl:defparameter (form) (parse-var form))
+(define-parser cl:defvar (form) (parse-var form))
