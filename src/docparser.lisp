@@ -139,6 +139,16 @@
   (print-unreadable-object (symbol stream :type t)
     (write-string (render-full-symbol symbol) stream)))
 
+(defmethod print-object ((operator operator-node) stream)
+  "Print an operator node."
+  (print-unreadable-object (operator stream :type t)
+    (format stream "~A ~A"
+            (let ((name (node-name operator)))
+              (if (symbol-setf-p name)
+                  (format nil "(setf ~A)" (render-humanize name))
+                  (render-humanize name)))
+            (operator-lambda-list operator))))
+
 ;;; Parsing
 
 (defun load-system (system-name)
