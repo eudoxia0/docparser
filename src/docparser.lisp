@@ -20,11 +20,11 @@
                      :initarg :name
                      :type string
                      :documentation "A symbol's name.")
-   (externalp :reader symbol-externalp
+   (externalp :reader symbol-external-p
               :initarg :externalp
               :type boolean
               :documentation "Whether the symbol is external to the package.")
-   (setfp :reader symbol-setfp
+   (setfp :reader symbol-setf-p
           :initarg :setfp
           :initform nil
           :type boolean
@@ -32,14 +32,14 @@
   (:documentation "A symbol."))
 
 (defclass documentation-node ()
-  ((documentation-symbol :reader doc-symbol
-                         :initarg :symbol
-                         :type symbol-node
-                         :documentation "The symbol name of the operator, variable, or class.")
-   (documentation-desc :reader doc-description
-                       :initarg :doc
-                       :type (or null string)
-                       :documentation "The node's documentation."))
+  ((node-name :reader node-name
+              :initarg :name
+              :type symbol-node
+              :documentation "The symbol name of the operator, variable, or class.")
+   (node-docstring :reader node-docstring
+                   :initarg :docstring
+                   :type (or null string)
+                   :documentation "The node's documentation."))
   (:documentation "Superclass for all documentation nodes."))
 
 (defclass operator-node (documentation-node)
@@ -103,7 +103,7 @@
 
 ;;; Constructors
 
-(defun symbol-external-p (symbol)
+(defun cl-symbol-external-p (symbol)
   "Whether or not a symbol is external."
   (multiple-value-bind (sym status)
       (find-symbol (symbol-name symbol)
@@ -111,12 +111,13 @@
     (declare (ignore sym))
     (eq status :external)))
 
-(defun symbol-node-from-symbol (symbol)
+(defun symbol-node-from-symbol (symbol &key setf)
   "Build a symbol node from a Common Lisp symbol."
   (make-instance 'symbol-node
                  :package (package-name (symbol-package symbol))
                  :name (symbol-name symbol)
-                 :externalp (symbol-external-p symbol)))
+                 :externalp (cl-symbol-external-p symbol)
+                 :setfp setf))
 
 ;;; Methods
 
@@ -183,4 +184,15 @@
 
 (define-parser cl:defun (form)
   (destructuring-bind (name (&rest args) &rest body) form
-    t))
+    (let ((docstring (if (stringp (first body))
+                         (first body)
+                         nil)))
+      (make-instance 'function-node
+                     :name (if (listp name)
+                               ;; SETF name
+                               (symbol-node-from-symbol (second name)
+                                                        :setf t)
+                               ;; Regular name
+                               (symbol-node-from-symbol name))
+                     :docstring docstring
+                     :lambda-list args))))
