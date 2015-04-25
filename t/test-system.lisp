@@ -56,6 +56,9 @@
                     :documentation "docstring"))
   (:documentation "docstring"))
 
+(defgeneric test-method (obj a)
+  (:documentation "docstring"))
+
 (defmethod test-method ((tc test-class) a)
   "docstring"
   (declare (ignore tc a))
@@ -65,3 +68,9 @@
   `(defun hidden-function () t))
 
 (indirectly-define-function)
+
+;;; CFFI stuff
+
+(cffi:defctype size-t :unsigned-long "docstring")
+
+(cffi:defcenum nums "docstring" :a :b (:c 3))
