@@ -7,11 +7,16 @@
   :bug-tracker ""
   :source-control (:git "")
   :depends-on (:trivial-types
-               :alexandria)
+               :alexandria
+               :cffi)
   :components ((:module "src"
                 :serial t
                 :components
-                ((:file "docparser"))))
+                ((:file "package")
+                 (:file "nodes")
+                 (:file "core")
+                 (:file "parsers")
+                 (:file "print"))))
   :description "Parse documentation from Common Lisp systems."
   :long-description
   #.(uiop:read-file-string
