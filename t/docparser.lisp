@@ -61,7 +61,35 @@
       (with-test-node (node 21 docparser:type-node "CUSTOM-STRING"))
       ;; The `test-class` class
       (with-test-node (node 22 docparser:class-node "TEST-CLASS")
-        t)
+        (is (equal (length (docparser:record-slots node))
+                   3))
+        (let ((first-slot (first (docparser:record-slots node))))
+          (is
+           (typep first-slot 'docparser:class-slot-node))
+          (is
+           (equal (docparser:symbol-node-name (docparser:node-name first-slot))
+                  "FIRST-SLOT"))
+          (is
+           (equal (docparser:node-docstring first-slot)
+                  "docstring"))))
+      ;; The `test-method` defgeneric
+      ;; The `test-method` method
+      ;; The `indirectly-define-function` macro
+      (with-test-node (node 25 docparser:macro-node "INDIRECTLY-DEFINE-FUNCTION")
+        (is
+         (equal (length (docparser:operator-lambda-list node))
+                0)))
+      ;; The `hidden-function` function
+      (with-test-node (node 26 docparser:function-node "HIDDEN-FUNCTION")
+        (is
+         (equal (length (docparser:operator-lambda-list node))
+                0)))
+      ;; The `size-t` CFFI type
+      (with-test-node (node 27 docparser:cffi-type "SIZE-T"))
+      ;; The `nums` CFFI enum
+      (with-test-node (node 28 docparser:cffi-enum "NUMS")
+        (is (equal (docparser:cffi-enum-variants node)
+                   (list :a :b :c))))
       )))
 
 (run! 'tests)

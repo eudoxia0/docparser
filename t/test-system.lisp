@@ -65,7 +65,10 @@
   t)
 
 (defmacro indirectly-define-function ()
-  `(defun hidden-function () t))
+  "docstring"
+  `(defun hidden-function ()
+     "docstring"
+     t))
 
 (indirectly-define-function)
 
