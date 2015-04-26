@@ -40,7 +40,7 @@
   struct-slot-b)
 
 (deftype custom-string (val)
-  "A type"
+  "docstring"
   (string= val "my-string"))
 
 (defclass test-class ()
