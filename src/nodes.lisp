@@ -33,7 +33,7 @@
                    :initarg :docstring
                    :type (or null string)
                    :documentation "The node's documentation."))
-  (:documentation "The base class of nodes with symbol names and docstrings."))
+  (:documentation "The base class of all documentable nodes."))
 
 (defclass operator-node (documentation-node)
  ((lambda-list :reader operator-lambda-list

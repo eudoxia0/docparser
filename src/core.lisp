@@ -68,13 +68,13 @@
   "Parse documentation from a system."
   (let* ((system (asdf:find-system system-name))
          (index (make-instance 'index
-                               :system-name (asdf:system-name system)))
+                               :system-name (asdf:component-name system)))
          (old-macroexpander *macroexpand-hook*)
          (*macroexpand-hook*
            #'(lambda (function form environment)
                (when (listp form)
                  ;; Package nodes are special cases
-                 (if (eql (first form) cl:defpackage)
+                 (if (eql (first form) 'cl:defpackage)
                      ;; Parse the package definition, and add the new package
                      ;; index to the index
                      (let ((package-index (parse-package-definition (rest form))))
