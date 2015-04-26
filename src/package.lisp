@@ -30,20 +30,27 @@
            :cffi-union
            :cffi-enum)
   ;; Accessors
-  (:export :symbol-node-package
+  (:export ;; Symbol
+           :symbol-node-package
            :symbol-node-name
            :symbol-external-p
-           :symbol-setf-p)
-  (:export :node-name
-           :node-docstring)
-  (:export :operator-lambda-list)
-  (:export :slot-accessors
+           :symbol-setf-p
+           ;; names and docstrings
+           :node-name
+           :node-docstring
+           ;; Operators
+           :operator-lambda-list
+           ;; Slots
+           :slot-accessors
            :slot-readers
            :slot-writers
            :slot-type
-           :slot-allocation)
-  (:export :record-slots)
-  (:export :class-node-superclasses)
+           :slot-allocation
+           ;; Records and classes
+           :record-slots
+           :class-node-superclasses)
+  ;; CFFI accessors
+  (:export :cffi-enum-variants)
   ;; Interface
   (:export :parse)
   (:documentation "Parse documentation from ASDF systems."))
