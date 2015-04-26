@@ -11,30 +11,49 @@
 ;;; Indices
 
 (defclass package-index ()
-  ((docstring :reader package-index-docstring
+  ((name :reader package-index-name
+         :initarg :name
+         :type string
+         :documentation "The package's name.")
+   (docstring :reader package-index-docstring
               :initarg :docstring
               :type string
               :documentation "The package's docstring.")
    (nodes :accessor package-index-nodes
-          :initform (list)
-          :type list
-          :documentation "A list of documentation objects."))
+          :initform (make-array 0
+                                :adjustable t
+                                :element-type 'documentation-node
+                                :fill-pointer 0)
+          :type (vector documentation-node)
+          :documentation "A vector of documentation objects."))
   (:documentation "Holds the documented objects in this package."))
 
 (defclass index ()
   ((system-name :reader index-system-name
                 :initarg :system-name
-                :type keyword
+                :type string
                 :documentation "The name of the parsed system.")
    (packages :accessor index-packages
-             :initform (list)
-             :type (proper-list package-index)
-             :documentation "A list of package indices."))
+             :initform (make-array 0
+                                   :adjustable t
+                                   :element-type 'package-index
+                                   :fill-pointer 0)
+             :type (vector package-index)
+             :documentation "A vector of package indices."))
   (:documentation "Holds system documentation, and the internal package indices."))
+
+(defun add-package-index (index package-index)
+  (vector-push-extend package-index (index-packages index)))
 
 (defun add-node (index node)
   "Add a node to an index, choosing the proper package."
-  t)
+  (let* ((symbol (node-name node))
+         (symbol-package (docparser:symbol-node-package symbol))
+         (package-index (find symbol-package
+                              (index-packages index)
+                              :key #'package-index-name)))
+    (when package-index
+      (vector-push-extend node (package-index-nodes package-index)))))
 
 ;;; Parsers
 
@@ -78,16 +97,18 @@
                      ;; Parse the package definition, and add the new package
                      ;; index to the index
                      (let ((package-index (parse-package-definition (rest form))))
-                       (push package-index (index-packages index)))
+                       (add-package-index index package-index)
+                       t)
                      ;; Regular node, parse it
                      (let ((node (parse-form form)))
                        (when node
-                         (add-node index node)))))
+                         (add-node index node))
+                       t))
                ;; Always pass the form to the old macroexpander. This ensures
                ;; the system is loaded properly.
                (funcall old-macroexpander
                         function
                         form
-                        environment))))
+                        environment)))))
     (load-system system-name)
     index))
