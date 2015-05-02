@@ -55,6 +55,16 @@
     (when package-index
       (vector-push-extend node (package-index-nodes package-index)))))
 
+(defun find-package-index (index package-name)
+  "Return the package-index with that name, or NIL."
+  (let ((results (remove-if-not #'(lambda (package-index)
+                                    (string= (package-index-name package-index)
+                                             package-name))
+                                (index-packages index))))
+    (if (> (length results) 0)
+        (elt results 0)
+        nil)))
+
 (defun query (index &key package-name symbol-name class)
   "Find all documentation nodes in the index matching the constraints and
 returns them as a vector. If none are found, return an empty vector."
