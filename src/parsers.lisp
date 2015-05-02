@@ -175,8 +175,8 @@
     (make-instance 'cffi-struct
                    :name (symbol-node-from-symbol name)
                    :docstring docstring
-                   :variants (loop for slot in slots collecting
-                               (parse-cffi-slot slot)))))
+                   :slots (loop for slot in slots collecting
+                            (parse-cffi-slot slot)))))
 
 (define-parser cffi:defcunion (name &rest doc-and-slots)
   (let ((docstring (if (stringp (first doc-and-slots))
