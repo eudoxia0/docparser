@@ -99,33 +99,47 @@ this is the definition of the parser for `defun` forms:
 
 ## Common Lisp Classes
 
-### Class `symbol-node`
+### `symbol-node`
 
-### Class `documentation-node`
+### `documentation-node`
 
-### Class `operator-node`
+### `operator-node`
 
-### Class `function-node`
+### `function-node`
 
-### Class `macro-node`
+### `macro-node`
 
-### Class `generic-function-node`
+### `generic-function-node`
 
-### Class `method-node`
+### `method-node`
 
-### Class `variable-node`
+### `variable-node`
 
-### Class `slot-node`
+### `slot-node`
 
-### Class `record-node`
+### `record-node`
 
-### Class `struct-node`
+### `struct-node`
 
-### Class `class-node`
+### `class-node`
 
-### Class `type-node`
+### `type-node`
 
 ## CFFI Classes
+
+### `cffi-node`
+
+### `cffi-function`
+
+### `cffi-type`
+
+### `cffi-slot`
+
+### `cffi-struct`
+
+### `cffi-union`
+
+### `cffi-enum`
 
 # License
 
