@@ -18,6 +18,12 @@
 (defparameter var t
   "docstring")
 
+(defvar var2 t
+  "docstring")
+
+(defconstant const t
+  "docstring")
+
 (defun func (a b &optional (c "") (l 1))
   "docstring"
   (declare (ignore a b c l))

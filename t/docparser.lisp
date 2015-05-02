@@ -37,13 +37,17 @@
               "DOCPARSER-TEST-SYSTEM"))
       (is
        (equal (length (docparser::package-index-nodes package-index))
-              29)))
+              31)))
     ;; Test that individual nodes were parsed properly
     (let ((nodes (docparser::package-index-nodes
                   (elt (docparser::index-packages index) 0)))
           (current-node 0))
-      ;; The `var` variable
+      ;; Variables
       (with-test-node (node docparser:variable-node "VAR")
+        t)
+      (with-test-node (node docparser:variable-node "VAR2")
+        t)
+      (with-test-node (node docparser:variable-node "CONST")
         t)
       ;; The `func` function
       (with-test-node (node docparser:function-node "FUNC")
