@@ -3,7 +3,7 @@ sudo: required
 
 env:
   matrix:
-    - LISP=sbcl COVERALLS=true
+    - LISP=sbcl
     - LISP=ccl
 
 install:
@@ -13,13 +13,14 @@ install:
   - git clone https://github.com/fukamachi/cl-coveralls ~/lisp/cl-coveralls
 
 script:
-  - cl -l fiveam
+  - cl -l fiveam -l cl-coveralls
        -e '(setf fiveam:*debug-on-error* t)'
        -e '(setf *debugger-hook*
                  (lambda (c h)
                    (declare (ignore c h))
                    (uiop:quit -1)))'
-       -e '(ql:quickload :docparser-test)'
+       -e '(coveralls:with-coveralls (:exclude (list "t" "src/print"))
+             (ql:quickload :docparser-test))'
 
 notifications:
   email:
