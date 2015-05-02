@@ -13,14 +13,13 @@ install:
   - git clone https://github.com/fukamachi/cl-coveralls ~/lisp/cl-coveralls
 
 script:
-  - cl -l fiveam -l cl-coveralls
+  - cl -l fiveam
        -e '(setf fiveam:*debug-on-error* t)'
        -e '(setf *debugger-hook*
                  (lambda (c h)
                    (declare (ignore c h))
                    (uiop:quit -1)))'
-       -e '(coveralls:with-coveralls (:exclude (list "t" "src/print"))
-             (ql:quickload :docparser-test))'
+       -e '(ql:quickload :docparser-test)'
 
 notifications:
   email:
