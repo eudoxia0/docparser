@@ -23,24 +23,27 @@
   :description "docparser tests.")
 (in-suite tests)
 
-(test parsing
-  (let ((index))
-    (finishes
-     (setf index (docparser:parse :docparser-test-system)))
+(defvar *index* nil)
+
+(test system-parsing
+  (let ((*index* (docparser:parse :docparser-test-system)))
     ;; Test the package
     (is
-     (equal (length (docparser::index-packages index))
+     (equal (length (docparser::index-packages *index*))
             1))
-    (let ((package-index (elt (docparser::index-packages index) 0)))
+    (let ((package-index (elt (docparser::index-packages *index*) 0)))
       (is
        (equal (docparser::package-index-name package-index)
               "DOCPARSER-TEST-SYSTEM"))
       (is
        (equal (length (docparser::package-index-nodes package-index))
-              31)))
+              31)))))
+
+(test nodes
+  (let ((*index* (docparser:parse :docparser-test-system)))
     ;; Test that individual nodes were parsed properly
     (let ((nodes (docparser::package-index-nodes
-                  (elt (docparser::index-packages index) 0)))
+                  (elt (docparser::index-packages *index*) 0)))
           (current-node 0))
       ;; Variables
       (with-test-node (node docparser:variable-node "VAR")
@@ -101,7 +104,6 @@
       ;; The `nums` CFFI enum
       (with-test-node (node docparser:cffi-enum "NUMS")
         (is (equal (docparser:cffi-enum-variants node)
-                   (list :a :b :c))))
-      )))
+                   (list :a :b :c)))))))
 
 (run! 'tests)
