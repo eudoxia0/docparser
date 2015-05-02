@@ -1,7 +1,6 @@
 # docparser
 
 [![Build Status](https://travis-ci.org/eudoxia0/docparser.svg?branch=master)](https://travis-ci.org/eudoxia0/docparser)
-[![Coverage Status](https://coveralls.io/repos/eudoxia0/docparser/badge.svg?branch=master)](https://coveralls.io/r/eudoxia0/docparser?branch=master)
 
 Extract documentation from Common Lisp systems.
 
