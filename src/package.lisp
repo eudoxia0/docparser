@@ -49,5 +49,8 @@
   ;; CFFI accessors
   (:export :cffi-enum-variants)
   ;; Interface
-  (:export :parse)
+  (:export :parse
+           :do-packages
+           :do-nodes
+           :query)
   (:documentation "Parse documentation from ASDF systems."))

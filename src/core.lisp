@@ -55,22 +55,6 @@
     (when package-index
       (vector-push-extend node (package-index-nodes package-index)))))
 
-(defun find-package-index (index package-name)
-  "Return the package-index with that name, or NIL."
-  (let ((results (remove-if-not #'(lambda (package-index)
-                                    (string= (package-index-name package-index)
-                                             package-name))
-                                (index-packages index))))
-    (if (> (length results) 0)
-        (elt results 0)
-        nil)))
-
-(defun query (index &key package-name symbol-name class)
-  "Find all documentation nodes in the index matching the constraints and
-returns them as a vector. If none are found, return an empty vector."
-  (declare (ignore index package-name symbol-name class))
-  (vector))
-
 ;;; Parsers
 
 (defparameter *parsers* (list)
@@ -97,7 +81,7 @@ returns them as a vector. If none are found, return an empty vector."
                    :name name
                    :docstring docstring)))
 
-;;; Interface
+;;; External interface
 
 (defun parse (system-name)
   "Parse documentation from a system."
@@ -128,3 +112,48 @@ returns them as a vector. If none are found, return an empty vector."
                         environment)))))
     (load-system system-name)
     index))
+
+(defmacro do-packages ((package index) &body body)
+  "Iterate over every package in the index."
+  `(loop for ,package across (index-packages ,index) do
+     ,@body))
+
+(defmacro do-nodes ((node package-index) &body body)
+  "Iterate over every node in a package index."
+  `(loop for ,node across (package-index-nodex ,package-index) do
+     ,@body))
+
+(defun find-package-index (index package-name)
+  "Return the package-index with that name, or NIL."
+  (let ((results (remove-if-not #'(lambda (package-index)
+                                    (string= (package-index-name package-index)
+                                             package-name))
+                                (index-packages index))))
+    (if (> (length results) 0)
+        (elt results 0)
+        nil)))
+
+(defun find-nodes (index package-predicate node-predicate)
+  "Return a vector of nodes satisfying node-predicate, in packages satisfying
+package-predicate."
+  (let ((package-indices (remove-if-not package-predicate (index-packages index))))
+    (apply #'concatenate
+           'vector
+           (loop for package-index in package-indices collecting
+             (remove-if-not node-predicate (package-index-nodes package-index))))))
+
+(defun query (index &key package-name symbol-name class)
+  "Find all documentation nodes in the index matching the constraints and
+returns them as a vector. If none are found, return an empty vector."
+  (find-nodes index
+              (lambda (package-index)
+                (if package-name
+                    (string= package-name (package-index-name package-index))
+                    t))
+              (lambda (node)
+                (and (if symbol-name
+                         (string= symbol-name (node-name node))
+                         t)
+                     (if class
+                         (typep node class)
+                         t)))))
