@@ -15,7 +15,8 @@ generator.
 Documentation generators generally implement their own (incomplete) version of
 docstring extraction. docparser is meant to extract as much information from a
 system as possible, and let documentation generators choose what to keep and
-discard.
+discard. This minimizes duplication of effort and separates documentation
+extraction from generation.
 
 docparser has classes to represent every documentable Common Lisp construct:
 
