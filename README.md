@@ -63,9 +63,15 @@ external dependencies.
 
 # Usage
 
+To extract documentation from a system (Which doesn't need to be loaded, but
+*must* be accessible to ASDF, so Quickload it before), do this:
+
 ```lisp
 (docparser:parse :my-system-name)
 ```
+
+This returns an index, which is basically a store of documentation nodes. To
+search for nodes by name or type, you use the `query` function.
 
 ## Extending
 
@@ -83,22 +89,17 @@ framework, you could create a subclass of `class-node`, `widget-node`, with
 extra slots for the added information.
 
 To define a new parser, use the `define-parser` macro. As an example of use,
-this is the definition of the parser for `defun` forms:
+this is the definition of the parser for `defmacro` forms:
 
 ```lisp
-(define-parser cl:defun (name (&rest args) &rest body)
+(define-parser cl:defmacro (name (&rest args) &rest body)
   (let ((docstring (if (stringp (first body))
                        (first body)
                        nil)))
-    (make-instance 'function-node
-                   :name (if (listp name)
-                             ;; SETF name
-                             (symbol-node-from-symbol (second name)
-                                                      :setf t)
-                             ;; Regular name
-                             (symbol-node-from-symbol name))
+    (make-instance 'macro-node
+                   :name (symbol-node-from-symbol name)
                    :docstring docstring
-                   :lambda-list args))))
+                   :lambda-list args)))
 ```
 
 # API
