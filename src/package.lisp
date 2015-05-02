@@ -2,10 +2,7 @@
 (defpackage docparser
   (:use :cl)
   (:import-from :trivial-types
-                :proper-list
-                :association-list)
-  (:import-from :alexandria
-                :destructuring-case)
+                :proper-list)
   ;; Classes
   (:export :symbol-node
            :documentation-node
