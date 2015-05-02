@@ -13,7 +13,8 @@ install:
   - git clone https://github.com/fukamachi/cl-coveralls ~/lisp/cl-coveralls
 
 script:
-  - cl -l fiveam -l cl-coveralls
+  - OPT=if [ $LISP=sbcl ]; then echo "--dynamic-space-size=1000"; fi
+  - cl $OPT -l fiveam -l cl-coveralls
        -e '(setf fiveam:*debug-on-error* t)'
        -e '(setf *debugger-hook*
                  (lambda (c h)
