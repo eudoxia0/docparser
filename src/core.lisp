@@ -55,6 +55,11 @@
     (when package-index
       (vector-push-extend node (package-index-nodes package-index)))))
 
+(defun query (index &key package-name symbol-name class)
+  "Find all documentation nodes in the index matching the constraints and
+returns them as a vector. If none are found, return an empty vector."
+  (vector))
+
 ;;; Parsers
 
 (defparameter *parsers* (list)
