@@ -58,6 +58,7 @@
 (defun query (index &key package-name symbol-name class)
   "Find all documentation nodes in the index matching the constraints and
 returns them as a vector. If none are found, return an empty vector."
+  (declare (ignore index package-name symbol-name class))
   (vector))
 
 ;;; Parsers

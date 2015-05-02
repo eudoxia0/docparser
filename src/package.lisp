@@ -31,12 +31,12 @@
            :symbol-node-package
            :symbol-node-name
            :symbol-external-p
-           :symbol-setf-p
            ;; names and docstrings
            :node-name
            :node-docstring
            ;; Operators
            :operator-lambda-list
+           :operator-setf-p
            ;; Slots
            :slot-accessors
            :slot-readers

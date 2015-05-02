@@ -13,12 +13,7 @@
    (externalp :reader symbol-external-p
               :initarg :externalp
               :type boolean
-              :documentation "Whether the symbol is external to the package.")
-   (setfp :reader symbol-setf-p
-          :initarg :setfp
-          :initform nil
-          :type boolean
-          :documentation "Whether the symbol is a setf method."))
+              :documentation "Whether the symbol is external to the package."))
   (:documentation "A symbol."))
 
 (defclass name-node ()
@@ -42,7 +37,11 @@
   (:documentation "The base class of functions and macros."))
 
 (defclass function-node (operator-node)
-  ()
+  ((setfp :reader operator-setf-p
+          :initarg :setfp
+          :initform nil
+          :type boolean
+          :documentation "Whether the function is a setf function."))
   (:documentation "A function."))
 
 (defclass macro-node (operator-node)
@@ -54,7 +53,11 @@
   (:documentation "A generic function."))
 
 (defclass method-node (operator-node)
-  ()
+  ((setfp :reader operator-setf-p
+          :initarg :setfp
+          :initform nil
+          :type boolean
+          :documentation "Whether the method is a setf method."))
   (:documentation "A method."))
 
 (defclass variable-node (documentation-node)
@@ -165,13 +168,12 @@
     (declare (ignore sym))
     (eq status :external)))
 
-(defun symbol-node-from-symbol (symbol &key setf)
+(defun symbol-node-from-symbol (symbol)
   "Build a symbol node from a Common Lisp symbol."
   (make-instance 'symbol-node
                  :package (package-name (symbol-package symbol))
                  :name (symbol-name symbol)
-                 :externalp (cl-symbol-external-p symbol)
-                 :setfp setf))
+                 :externalp (cl-symbol-external-p symbol)))
 
 ;;; Methods
 

@@ -18,10 +18,7 @@
               (generic-function-node "generic function")
               (method-node "method")
               (t "operator"))
-            (let ((name (node-name operator)))
-              (if (symbol-setf-p name)
-                  (format nil "(setf ~A)" (render-humanize name))
-                  (render-humanize name)))
+            (render-humanize (node-name operator))
             (operator-lambda-list operator))))
 
 (defmethod print-object ((var variable-node) stream)

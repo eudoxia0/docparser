@@ -5,13 +5,14 @@
                        (first body)
                        nil)))
     (make-instance 'function-node
-                   :name (if (listp name)
-                             ;; SETF name
-                             (symbol-node-from-symbol (second name)
-                                                      :setf t)
-                             ;; Regular name
-                             (symbol-node-from-symbol name))
+                   :name (symbol-node-from-symbol
+                          (if (listp name)
+                              ;; SETF name
+                              (second name)
+                              ;; Regular name
+                              name))
                    :docstring docstring
+                   :setfp (listp name)
                    :lambda-list args)))
 
 (define-parser cl:defmacro (name (&rest args) &rest body)
@@ -35,13 +36,14 @@
                        (first body)
                        nil)))
     (make-instance 'method-node
-                   :name (if (listp name)
-                             ;; SETF name
-                             (symbol-node-from-symbol (second name)
-                                                      :setf t)
-                             ;; Regular name
-                             (symbol-node-from-symbol name))
+                   :name (symbol-node-from-symbol
+                          (if (listp name)
+                              ;; SETF name
+                              (second name)
+                              ;; Regular name
+                              name))
                    :docstring docstring
+                   :setfp (listp name)
                    :lambda-list args)))
 
 (defun parse-var (form)
