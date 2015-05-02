@@ -35,7 +35,7 @@ docparser has classes to represent every documentable Common Lisp construct:
 
 ## CFFI Documentation
 
-Additionally, docparser custom subclasses to represent the documentation of
+Additionally, docparser has custom subclasses to represent the documentation of
 [CFFI][cffi] definitions:
 
 * Foreign functions ([`defcfun`][defcfun]).
