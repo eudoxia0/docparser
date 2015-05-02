@@ -113,7 +113,8 @@
 
 (defclass cffi-node ()
   ()
-  (:documentation "A CFFI construct."))
+  (:documentation "The base class of all CFFI documentation nodes. Does not
+ inherit from documentation-node as not all sub-nodes have docstrings."))
 
 (defclass cffi-function (cffi-node function-node)
   ((return-type :reader cffi-function-return-type
