@@ -1,13 +1,13 @@
 # docparser
 
-Extract documentation from Common Lisp systems. It will be used in the
-[Codex][codex] documentation generator.
+Extract documentation from Common Lisp systems.
 
 # Overview
 
 docparser is a library for extracting documentation from Common Lisp systems in
 a structured manner. It takes a system name and returns a set of objects
-representing packages, variables, functions, classes, etc. and their docstrings.
+representing packages, variables, functions, classes, etc. and their
+docstrings. It will be used in the [Codex][codex] documentation generator.
 
 It's not yet another documentation generator. Rather, it simply provides the
 documentation extraction layer on top of which you can build a documentation
