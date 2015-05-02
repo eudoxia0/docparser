@@ -1,6 +1,7 @@
 # docparser
 
-Extract documentation from Common Lisp systems.
+Extract documentation from Common Lisp systems. It will be used in the
+[Codex][codex] documentation generator.
 
 # Overview
 
@@ -48,6 +49,7 @@ loading errors, so documentation can be generated even in a machine that can't
 properly load the library. This is useful for documenting libraries with complex
 external dependencies.
 
+[codex]: https://github.com/CommonDoc/codex
 [cffi]: https://github.com/cffi/cffi
 [defcfun]: https://common-lisp.net/project/cffi/manual/cffi-manual.html#defcfun
 [defctype]: https://common-lisp.net/project/cffi/manual/cffi-manual.html#defctype
