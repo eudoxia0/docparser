@@ -5,12 +5,11 @@
                        (first body)
                        nil)))
     (make-instance 'function-node
-                   :name (symbol-node-from-symbol
-                          (if (listp name)
-                              ;; SETF name
-                              (second name)
-                              ;; Regular name
-                              name))
+                   :name (if (listp name)
+                             ;; SETF name
+                             (second name)
+                             ;; Regular name
+                             name)
                    :docstring docstring
                    :setfp (listp name)
                    :lambda-list args)))
@@ -20,14 +19,14 @@
                        (first body)
                        nil)))
     (make-instance 'macro-node
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :lambda-list args)))
 
 (define-parser cl:defgeneric (name (&rest args) &rest options)
   (let ((docstring (second (find :documentation options :key #'first))))
     (make-instance 'generic-function-node
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :lambda-list args)))
 
@@ -36,12 +35,11 @@
                        (first body)
                        nil)))
     (make-instance 'method-node
-                   :name (symbol-node-from-symbol
-                          (if (listp name)
-                              ;; SETF name
-                              (second name)
-                              ;; Regular name
-                              name))
+                   :name (if (listp name)
+                             ;; SETF name
+                             (second name)
+                             ;; Regular name
+                             name)
                    :docstring docstring
                    :setfp (listp name)
                    :lambda-list args)))
@@ -50,7 +48,7 @@
   (destructuring-bind (name &optional initial-value docstring) form
     (declare (ignore initial-value))
     (make-instance 'variable-node
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring)))
 
 (define-parser cl:defparameter (&rest form)
@@ -67,7 +65,7 @@
                        (first body)
                        nil)))
     (make-instance 'type-node
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :lambda-list lambda-list)))
 
@@ -77,10 +75,7 @@
              (let ((out (list)))
                (loop while (getf (rest slot) key) do
                  (push (getf (rest slot) key) out)
-                 (remf (rest slot) key))))
-           (list->symbols (list)
-             (loop for fn in list collecting
-                                  (symbol-node-from-symbol fn))))
+                 (remf (rest slot) key)))))
       (let ((accessors (extract-all-and-delete :accessor))
             (readers (extract-all-and-delete :reader))
             (writers (extract-all-and-delete :writer)))
@@ -90,20 +85,19 @@
             slot
           (declare (ignore initarg initform))
           (make-instance 'class-slot-node
-                         :name (symbol-node-from-symbol name)
+                         :name name
                          :docstring documentation
                          :type type
                          :allocation allocation
-                         :accessors (list->symbols accessors)
-                         :readers (list->symbols readers)
-                         :writers (list->symbols writers)))))))
+                         :accessors accessors
+                         :readers readers
+                         :writers writers))))))
 
 (define-parser cl:defclass (name superclasses slots &rest options)
   (let ((docstring (second (find :documentation options :key #'first))))
     (make-instance 'class-node
-                   :name (symbol-node-from-symbol name)
-                   :superclasses (loop for class in superclasses collecting
-                                   (symbol-node-from-symbol name))
+                   :name name
+                   :superclasses superclasses
                    :slots (loop for slot in slots collecting
                             (parse-slot slot))
                    :docstring docstring)))
@@ -113,7 +107,7 @@
                   (first slot)
                   slot)))
     (make-instance 'struct-slot-node
-                   :name (symbol-node-from-symbol name))))
+                   :name name)))
 
 (define-parser cl:defstruct (name-and-options &rest slots)
   (let ((name (if (listp name-and-options)
@@ -126,7 +120,7 @@
                    (rest slots)
                    slots)))
     (make-instance 'struct-node
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :slots (loop for slot in slots collecting
                             (parse-struct-slot slot)))))
@@ -144,14 +138,14 @@
                   (rest args)
                   nil)))
     (make-instance 'cffi-function
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :return-type return-type
                    :lambda-list args)))
 
 (define-parser cffi:defctype (name base-type &optional docstring)
   (make-instance 'cffi-type
-                 :name (symbol-node-from-symbol name)
+                 :name name
                  :docstring docstring
                  :base-type base-type))
 
@@ -159,7 +153,7 @@
   (destructuring-bind (name type &rest rest) form
     (declare (ignore rest))
     (make-instance 'cffi-slot
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :type type)))
 
 (define-parser cffi:defcstruct (name-and-options &rest doc-and-slots)
@@ -173,7 +167,7 @@
                    (rest doc-and-slots)
                    nil)))
     (make-instance 'cffi-struct
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :slots (loop for slot in slots collecting
                             (parse-cffi-slot slot)))))
@@ -186,7 +180,7 @@
                    (rest doc-and-slots)
                    nil)))
     (make-instance 'cffi-union
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :variants (loop for slot in slots collecting
                                (parse-cffi-slot slot)))))
@@ -202,7 +196,7 @@
                        (rest enum-list)
                        nil)))
     (make-instance 'cffi-enum
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :variants (loop for variant in enum-list collecting
                                (if (listp variant)

@@ -4,8 +4,7 @@
   (:import-from :trivial-types
                 :proper-list)
   ;; Classes
-  (:export :symbol-node
-           :documentation-node
+  (:export :documentation-node
            :operator-node
            :function-node
            :macro-node
@@ -27,11 +26,7 @@
            :cffi-union
            :cffi-enum)
   ;; Accessors
-  (:export ;; Symbol
-           :symbol-node-package
-           :symbol-node-name
-           :symbol-external-p
-           ;; names and docstrings
+  (:export ;; names and docstrings
            :node-name
            :node-docstring
            ;; Operators
@@ -49,7 +44,9 @@
   ;; CFFI accessors
   (:export :cffi-enum-variants)
   ;; Methods
-  (:export :render-full-symbol
+  (:export :symbol-external-p
+           :symbol-package-name
+           :render-full-symbol
            :render-humanize)
   ;; Interface
   (:export :parse

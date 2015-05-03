@@ -10,7 +10,7 @@
      (is
       (typep ,node ',type))
      (is
-      (equal (docparser:symbol-node-name (docparser:node-name ,node))
+      (equal (symbol-name (docparser:node-name ,node))
              ,name))
      (is (equal (docparser:node-docstring ,node)
                 "docstring"))
@@ -80,7 +80,7 @@
           (is
            (typep first-slot 'docparser:class-slot-node))
           (is
-           (equal (docparser:symbol-node-name (docparser:node-name first-slot))
+           (equal (symbol-name (docparser:node-name first-slot))
                   "FIRST-SLOT"))
           (is
            (equal (docparser:node-docstring first-slot)

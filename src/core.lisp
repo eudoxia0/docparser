@@ -44,7 +44,7 @@
 (defun add-node (index node)
   "Add a node to an index, choosing the proper package."
   (let* ((symbol (node-name node))
-         (symbol-package (docparser:symbol-node-package symbol))
+         (symbol-package (docparser:symbol-package-name symbol))
          (package-index (find symbol-package
                               (index-packages index)
                               :key #'package-index-name)))
@@ -154,7 +154,7 @@ returns them as a vector. If none are found, return NIL."
                     t))
               (lambda (node)
                 (and (if symbol-name
-                         (string= symbol-name (symbol-node-name (node-name node)))
+                         (string= symbol-name (symbol-name (node-name node)))
                          t)
                      (if class
                          (typep node class)

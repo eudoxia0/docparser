@@ -96,7 +96,7 @@ this is the definition of the parser for `defmacro` forms:
                        (first body)
                        nil)))
     (make-instance 'macro-node
-                   :name (symbol-node-from-symbol name)
+                   :name name
                    :docstring docstring
                    :lambda-list args)))
 ```
@@ -104,8 +104,6 @@ this is the definition of the parser for `defmacro` forms:
 # API
 
 ## Common Lisp Classes
-
-### `symbol-node`
 
 ### `documentation-node`
 

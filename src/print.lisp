@@ -3,11 +3,6 @@
 
 ;;; Common Lisp classes
 
-(defmethod print-object ((symbol symbol-node) stream)
-  "Print a symbol node."
-  (print-unreadable-object (symbol stream)
-    (format stream "symbol ~A" (render-humanize symbol))))
-
 (defmethod print-object ((operator operator-node) stream)
   "Print an operator node."
   (print-unreadable-object (operator stream)

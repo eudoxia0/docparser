@@ -1,25 +1,10 @@
 ;;;; Classes that represent documentation nodes, and some methods
 (in-package :docparser)
 
-(defclass symbol-node ()
-  ((symbol-node-package :reader symbol-node-package
-                        :initarg :package
-                        :type string
-                        :documentation "A symbol's package name.")
-   (symbol-node-name :reader symbol-node-name
-                     :initarg :name
-                     :type string
-                     :documentation "A symbol's name.")
-   (externalp :reader symbol-external-p
-              :initarg :externalp
-              :type boolean
-              :documentation "Whether the symbol is external to the package."))
-  (:documentation "A symbol."))
-
 (defclass name-node ()
   ((node-name :reader node-name
               :initarg :name
-              :type symbol-node
+              :type symbol
               :documentation "The symbol name of the operator, variable, or class."))
   (:documentation "The base class of nodes with symbol names."))
 
@@ -72,15 +57,15 @@
   ((accessors :reader slot-accessors
               :initarg :accessors
               :initform nil
-              :type (proper-list symbol-node))
+              :type (proper-list symbol))
    (readers :reader slot-readers
             :initarg :readers
             :initform nil
-            :type (proper-list symbol-node))
+            :type (proper-list symbol))
    (writers :reader slot-writers
             :initarg :writers
             :initform nil
-            :type (proper-list symbol-node))
+            :type (proper-list symbol))
    (type :reader slot-type
          :initarg :type
          :documentation "The slot's type.")
@@ -158,9 +143,9 @@
              :documentation "A list of enum values (keywords)."))
   (:documentation "A C enum."))
 
-;;; Constructors
+;;; Methods
 
-(defun cl-symbol-external-p (symbol)
+(defun symbol-external-p (symbol)
   "Whether or not a symbol is external."
   (multiple-value-bind (sym status)
       (find-symbol (symbol-name symbol)
@@ -168,22 +153,17 @@
     (declare (ignore sym))
     (eq status :external)))
 
-(defun symbol-node-from-symbol (symbol)
-  "Build a symbol node from a Common Lisp symbol."
-  (make-instance 'symbol-node
-                 :package (package-name (symbol-package symbol))
-                 :name (symbol-name symbol)
-                 :externalp (cl-symbol-external-p symbol)))
+(defun symbol-package-name (symbol)
+  "Return the name of a package's symbol."
+  (package-name (symbol-package symbol)))
 
-;;; Methods
-
-(defun render-full-symbol (symbol-node)
+(defun render-full-symbol (symbol)
   "Render a symbol into a string."
   (concatenate 'string
-               (symbol-node-package symbol-node)
+               (package-name (symbol-package symbol))
                ":"
-               (symbol-node-name symbol-node)))
+               (symbol-name symbol)))
 
-(defun render-humanize (symbol-node)
+(defun render-humanize (symbol)
   "Render a symbol into a string in a human-friendly way."
-  (string-downcase (symbol-node-name symbol-node)))
+  (string-downcase (symbol-name symbol)))
