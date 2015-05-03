@@ -48,6 +48,11 @@
            :symbol-package-name
            :render-full-symbol
            :render-humanize)
+  ;; Indices
+  (:export :package-index
+           :index
+           :package-index-name
+           :package-index-docstring)
   ;; Interface
   (:export :parse
            :do-packages

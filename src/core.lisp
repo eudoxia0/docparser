@@ -17,7 +17,7 @@
          :documentation "The package's name.")
    (docstring :reader package-index-docstring
               :initarg :docstring
-              :type string
+              :type (or null string)
               :documentation "The package's docstring.")
    (nodes :accessor package-index-nodes
           :initform (make-array 0
