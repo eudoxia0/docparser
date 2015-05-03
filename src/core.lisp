@@ -122,7 +122,7 @@
 
 (defmacro do-nodes ((node package-index) &body body)
   "Iterate over every node in a package index."
-  `(loop for ,node across (package-index-nodex ,package-index) do
+  `(loop for ,node across (package-index-nodes ,package-index) do
      ,@body))
 
 (defun find-package-index (index package-name)
