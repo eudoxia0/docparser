@@ -106,4 +106,18 @@
         (is (equal (docparser:cffi-enum-variants node)
                    (list :a :b :c)))))))
 
+(test queries
+  (let ((*index* (docparser:parse :docparser-test-system)))
+    (let ((result (docparser:query *index* :symbol-name "VAR")))
+      (is (equal (length result)
+                 1))
+      (is (equal (docparser:node-docstring (elt result 0))
+                 "docstring")))
+    (let ((result (docparser:query *index* :package-name "DOCPARSER-TEST-SYSTEM"
+                                           :symbol-name "VAR")))
+      (is (equal (length result)
+                 1))
+      (is (equal (docparser:node-docstring (elt result 0))
+                 "docstring")))))
+
 (run! 'tests)
