@@ -141,7 +141,7 @@ package-predicate."
   (let ((package-indices (remove-if-not package-predicate (index-packages index))))
     (apply #'concatenate
            'vector
-           (loop for package-index in package-indices collecting
+           (loop for package-index across package-indices collecting
              (remove-if-not node-predicate (package-index-nodes package-index))))))
 
 (defun query (index &key package-name symbol-name class)
@@ -154,7 +154,7 @@ returns them as a vector. If none are found, return NIL."
                     t))
               (lambda (node)
                 (and (if symbol-name
-                         (string= symbol-name (node-name node))
+                         (string= symbol-name (symbol-node-name (node-name node)))
                          t)
                      (if class
                          (typep node class)
