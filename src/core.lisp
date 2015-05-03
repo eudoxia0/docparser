@@ -29,11 +29,7 @@
   (:documentation "Holds the documented objects in this package."))
 
 (defclass index ()
-  ((system-name :reader index-system-name
-                :initarg :system-name
-                :type string
-                :documentation "The name of the parsed system.")
-   (packages :accessor index-packages
+  ((packages :accessor index-packages
              :initform (make-array 0
                                    :adjustable t
                                    :element-type 'package-index
@@ -81,14 +77,9 @@
                    :name name
                    :docstring docstring)))
 
-;;; External interface
-
-(defun parse (system-name)
-  "Parse documentation from a system."
-  (let* ((system (asdf:find-system system-name))
-         (index (make-instance 'index
-                               :system-name (asdf:component-name system)))
-         (old-macroexpander *macroexpand-hook*)
+(defun parse-system (index system-name)
+  "Parse a system."
+  (let* ((old-macroexpander *macroexpand-hook*)
          (*macroexpand-hook*
            #'(lambda (function form environment)
                (when (listp form)
@@ -110,7 +101,18 @@
                         function
                         form
                         environment)))))
-    (load-system system-name)
+    (load-system system-name)))
+
+
+;;; External interface
+
+(defun parse (system-or-list)
+  "Parse documentation from either a system name or a list of system names."
+  (let ((index (make-instance 'index)))
+    (if (listp system-or-list)
+        (loop for name in system-or-list do
+          (parse-system index name))
+        (parse-system index system-or-list))
     index))
 
 (defmacro do-packages ((package index) &body body)
@@ -144,7 +146,7 @@ package-predicate."
 
 (defun query (index &key package-name symbol-name class)
   "Find all documentation nodes in the index matching the constraints and
-returns them as a vector. If none are found, return an empty vector."
+returns them as a vector. If none are found, return NIL."
   (find-nodes index
               (lambda (package-index)
                 (if package-name

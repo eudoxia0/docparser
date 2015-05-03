@@ -48,6 +48,9 @@
            :class-node-superclasses)
   ;; CFFI accessors
   (:export :cffi-enum-variants)
+  ;; Methods
+  (:export :render-full-symbol
+           :render-humanize)
   ;; Interface
   (:export :parse
            :do-packages
