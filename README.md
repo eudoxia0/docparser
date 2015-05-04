@@ -76,6 +76,10 @@ quick overview of what's in it, use the `dump` function:
 ```lisp
 CL-USER> (docparser:dump (docparser:parse :cl-yaml))
 ; some compilation output
+Package "YAML.ERROR" with docstring "YAML errors."
+  #<condition yaml-error>
+  #<condition parsing-error>
+  #<condition unsupported-float-value>
 Package "YAML.FLOAT" with docstring "Handle IEEE floating point values."
   #<variable *float-strategy*>
   #<variable *sbcl-nan-value*>
@@ -83,10 +87,6 @@ Package "YAML.FLOAT" with docstring "Handle IEEE floating point values."
   #<function positive-infinity NIL>
   #<function negative-infinity NIL>
 Package "YAML.SCALAR" with docstring "Parser for scalar values."
-  #<variable +null+>
-  #<variable +false+>
-  #<variable +null-names+>
-  #<variable +true-names+>
 ...
 ```
 
@@ -124,15 +124,15 @@ CL-USER> (docparser:do-packages (package *index*)
            (docparser:do-nodes (node package)
              (print (class-of node))))
 In package: YAML.ERROR.
+#<STANDARD-CLASS DOCPARSER:CONDITION-NODE>
+#<STANDARD-CLASS DOCPARSER:CONDITION-NODE>
+#<STANDARD-CLASS DOCPARSER:CONDITION-NODE>
 In package: YAML.FLOAT.
 #<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
 #<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
 #<STANDARD-CLASS DOCPARSER:FUNCTION-NODE>
 #<STANDARD-CLASS DOCPARSER:FUNCTION-NODE>
 #<STANDARD-CLASS DOCPARSER:FUNCTION-NODE>
-In package: YAML.SCALAR.
-#<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
-#<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
 ...
 ```
 
