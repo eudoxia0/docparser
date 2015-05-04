@@ -202,3 +202,21 @@
                                (if (listp variant)
                                    (first variant)
                                    variant)))))
+
+(define-parser cffi:defbitfield (name-and-options &rest masks)
+  (let ((name (if (listp name-and-options)
+                  (first name-and-options)
+                  name-and-options))
+        (docstring (if (stringp (first masks))
+                       (first masks)
+                       nil))
+        (masks (if (stringp (first masks))
+                   (rest masks)
+                   nil)))
+    (make-instance 'cffi-bitfield
+                   :name name
+                   :docstring docstring
+                   :masks (loop for mask in masks collecting
+                            (if (listp mask)
+                                (first mask)
+                                mask)))))
