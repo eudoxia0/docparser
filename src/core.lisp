@@ -2,11 +2,22 @@
 
 ;;; Loading systems
 
+(defmacro with-ignored-errors (() &body body)
+  "Catch and ignore certain errors."
+  `(handler-case
+       (progn
+         ,@body)
+     (cffi:load-foreign-library-error ()
+       (format t "Failed to load foreign library. Ignoring.~%"))
+     (uiop:compile-file-error ()
+       (format t "Compilation error. Ignoring. ~%"))))
+
 (defun load-system (system-name)
   "Load an ASDF system by name."
-  (uiop:with-muffled-loader-conditions ()
-    (uiop:with-muffled-compiler-conditions ()
-      (asdf:load-system system-name :verbose nil :force t))))
+  (with-ignored-errors ()
+    (uiop:with-muffled-loader-conditions ()
+      (uiop:with-muffled-compiler-conditions ()
+        (asdf:compile-system system-name :verbose nil :force t)))))
 
 ;;; Indices
 
@@ -39,14 +50,16 @@
   (:documentation "Holds system documentation, and the internal package indices."))
 
 (defun add-package-index (index package-index)
-  (vector-push-extend package-index (index-packages index)))
+  (unless (find-package-index index (package-index-name package-index))
+    (vector-push-extend package-index (index-packages index))))
 
 (defun add-node (index node)
-  "Add a node to an index, choosing the proper package."
+  "Add a node to an index, finding the proper package index."
   (let* ((symbol (node-name node))
          (symbol-package (docparser:symbol-package-name symbol))
          (package-index (find symbol-package
                               (index-packages index)
+                              :test #'equal
                               :key #'package-index-name)))
     (when package-index
       (vector-push-extend node (package-index-nodes package-index)))))
@@ -103,7 +116,6 @@
                         environment)))))
     (load-system system-name)))
 
-
 ;;; External interface
 
 (defun parse (system-or-list)
@@ -146,7 +158,8 @@ package-predicate."
 
 (defun query (index &key package-name symbol-name class)
   "Find all documentation nodes in the index matching the constraints and
-returns them as a vector. If none are found, return NIL."
+returns them as a vector. package-name and symbol-name are strings, class is the
+symbol of a class name. If none are found, return NIL."
   (find-nodes index
               (lambda (package-index)
                 (if package-name
