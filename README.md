@@ -165,50 +165,6 @@ this is the definition of the parser for `defmacro` forms:
                    :lambda-list args)))
 ```
 
-# API
-
-## Common Lisp Classes
-
-### `documentation-node`
-
-### `operator-node`
-
-### `function-node`
-
-### `macro-node`
-
-### `generic-function-node`
-
-### `method-node`
-
-### `variable-node`
-
-### `slot-node`
-
-### `record-node`
-
-### `struct-node`
-
-### `class-node`
-
-### `type-node`
-
-## CFFI Classes
-
-### `cffi-node`
-
-### `cffi-function`
-
-### `cffi-type`
-
-### `cffi-slot`
-
-### `cffi-struct`
-
-### `cffi-union`
-
-### `cffi-enum`
-
 # License
 
 Copyright (c) 2015 Fernando Borretti
