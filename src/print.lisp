@@ -60,3 +60,15 @@
     (format stream "defcenum ~A (~{~A~#[~:;, ~]~})"
             (render-humanize (node-name enum))
             (cffi-enum-variants enum))))
+
+;;; Dump
+
+(defun dump (index)
+  "Print a tree of the contents of an index to the *standard-output*."
+  (do-packages (package index)
+    (format t "Package ~S" (package-index-name package))
+    (awhen (package-index-docstring package)
+      (format t " with docstring ~S" it))
+    (write-char #\Newline)
+    (do-nodes (node package)
+      (format t "  ~A~%" (prin1-to-string node)))))
