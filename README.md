@@ -115,6 +115,27 @@ CL-USER> (docparser:query *index* :package-name "CL-YAML"
 #(#<generic function parse (INPUT &KEY MULTI-DOCUMENT-P)>)
 ```
 
+If you don't know what the index contains, you can go through it using the
+`do-packages` and `do-nodes` macros:
+
+```lisp
+CL-USER> (docparser:do-packages (package *index*)
+           (format t "~&In package: ~A." (docparser:package-index-name package))
+           (docparser:do-nodes (node package)
+             (print (class-of node))))
+In package: YAML.ERROR.
+In package: YAML.FLOAT.
+#<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
+#<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
+#<STANDARD-CLASS DOCPARSER:FUNCTION-NODE>
+#<STANDARD-CLASS DOCPARSER:FUNCTION-NODE>
+#<STANDARD-CLASS DOCPARSER:FUNCTION-NODE>
+In package: YAML.SCALAR.
+#<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
+#<STANDARD-CLASS DOCPARSER:VARIABLE-NODE>
+...
+```
+
 ## Extending
 
 You can extend docparser in two ways: Adding new parsers and new classes. Adding
