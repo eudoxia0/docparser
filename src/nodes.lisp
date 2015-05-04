@@ -143,6 +143,13 @@
              :documentation "A list of enum values (keywords)."))
   (:documentation "A C enum."))
 
+(defclass cffi-bitfield (cffi-node documentation-node)
+  ((masks :reader cffi-bitfield-masks
+          :initarg :masks
+          :type (proper-list keyword)
+          :documentation "A list of masks (keywords)."))
+  (:documentation "A C bitfield."))
+
 ;;; Methods
 
 (defun symbol-external-p (symbol)
