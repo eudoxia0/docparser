@@ -93,6 +93,10 @@
                  :documentation "A list of the class's superclasses (symbols)."))
   (:documentation "A class."))
 
+(defclass condition-node (class-node)
+  ()
+  (:documentation "A condition."))
+
 (defclass type-node (operator-node)
   ()
   (:documentation "A type."))

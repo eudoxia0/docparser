@@ -19,6 +19,7 @@
            :record-node
            :struct-node
            :class-node
+           :condition-node
            :type-node)
   ;; CFFI classes
   (:export :cffi-node

@@ -31,6 +31,11 @@
   (print-unreadable-object (class stream)
     (format stream "class ~A" (render-humanize (node-name class)))))
 
+(defmethod print-object ((condition condition-node) stream)
+  "Print a condition definition node."
+  (print-unreadable-object (condition stream)
+    (format stream "condition ~A" (render-humanize (node-name condition)))))
+
 (defmethod print-object ((type type-node) stream)
   "Print a type definition node."
   (print-unreadable-object (type stream)

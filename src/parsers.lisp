@@ -102,6 +102,15 @@
                             (parse-slot slot))
                    :docstring docstring)))
 
+(define-parser cl:define-condition (name superclasses slots &rest options)
+  (let ((docstring (second (find :documentation options :key #'first))))
+    (make-instance 'condition-node
+                   :name name
+                   :superclasses superclasses
+                   :slots (loop for slot in slots collecting
+                            (parse-slot slot))
+                   :docstring docstring)))
+
 (defun parse-struct-slot (slot)
   (let ((name (if (listp slot)
                   (first slot)
