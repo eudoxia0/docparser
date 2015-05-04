@@ -37,7 +37,7 @@
               "DOCPARSER-TEST-SYSTEM"))
       (is
        (equal (length (docparser::package-index-nodes package-index))
-              31)))))
+              32)))))
 
 (test nodes
   (let ((*index* (docparser:parse :docparser-test-system)))
@@ -104,6 +104,10 @@
       ;; The `nums` CFFI enum
       (with-test-node (node docparser:cffi-enum "NUMS")
         (is (equal (docparser:cffi-enum-variants node)
+                   (list :a :b :c))))
+      ;; The `bits` CFFI bitfield
+      (with-test-node (node docparser:cffi-bitfield "BITS")
+        (is (equal (docparser:cffi-bitfield-masks node)
                    (list :a :b :c)))))))
 
 (test queries

@@ -1,17 +1,6 @@
 (in-package :cl-user)
 (defpackage docparser-test-system
   (:use :cl)
-  (:export :var
-           :func
-           :mac
-           :rec1
-           :rec2
-           :struct-slot-a
-           :struct-slot-b
-           :test-class
-           :first-slot
-           :second-slot
-           :test-method)
   (:documentation "docstring"))
 (in-package :docparser-test-system)
 
@@ -83,3 +72,5 @@
 (cffi:defctype size-t :unsigned-long "docstring")
 
 (cffi:defcenum nums "docstring" :a :b (:c 3))
+
+(cffi:defbitfield bits "docstring" :a :b (:c #x0200))
