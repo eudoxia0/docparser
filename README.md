@@ -29,7 +29,8 @@ docparser has classes to represent every documentable Common Lisp construct:
 * Methods
 * Special variables and constants
 * Classes and class slots
-* Structures and structure slots
+* Structures
+* Conditions
 * Type definitions
 * Packages
 
@@ -69,8 +70,50 @@ To extract documentation from a system (Which doesn't need to be loaded, but
 (docparser:parse :my-system-name)
 ```
 
-This returns an index, which is basically a store of documentation nodes. To
-search for nodes by name or type, you use the `query` function.
+This returns an index, which is basically a store of documentation nodes. For a
+quick overview of what's in it, use the `dump` function:
+
+```lisp
+CL-USER> (docparser:dump (docparser:parse :cl-yaml))
+; some compilation output
+Package "YAML.FLOAT" with docstring "Handle IEEE floating point values."
+  #<variable *float-strategy*>
+  #<variable *sbcl-nan-value*>
+  #<function not-a-number NIL>
+  #<function positive-infinity NIL>
+  #<function negative-infinity NIL>
+Package "YAML.SCALAR" with docstring "Parser for scalar values."
+  #<variable +null+>
+  #<variable +false+>
+  #<variable +null-names+>
+  #<variable +true-names+>
+...
+```
+
+To search for nodes by name or type, you use the `query` function:
+
+```lisp
+CL-USER> (defparameter *index* (docparser:parse :cl-yaml))
+; some compilation output
+*INDEX*
+
+CL-USER> (docparser:query *index* :package-name "CL-YAML")
+#(#<generic function parse (INPUT &KEY MULTI-DOCUMENT-P)>
+  #<method parse ((INPUT STRING) &KEY MULTI-DOCUMENT-P)>
+  #<method parse ((INPUT PATHNAME) &KEY MULTI-DOCUMENT-P)>
+  #<function emit (VALUE STREAM)> #<function emit-to-string (VALUE)>)
+
+CL-USER> (docparser:query *index* :package-name "CL-YAML"
+                                  :symbol-name "PARSE")
+#(#<generic function parse (INPUT &KEY MULTI-DOCUMENT-P)>
+  #<method parse ((INPUT STRING) &KEY MULTI-DOCUMENT-P)>
+  #<method parse ((INPUT PATHNAME) &KEY MULTI-DOCUMENT-P)>)
+
+CL-USER> (docparser:query *index* :package-name "CL-YAML"
+                                  :symbol-name "PARSE"
+                                  :class 'docparser:generic-function-node)
+#(#<generic function parse (INPUT &KEY MULTI-DOCUMENT-P)>)
+```
 
 ## Extending
 
