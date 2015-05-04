@@ -3,6 +3,9 @@
   (:use :cl)
   (:import-from :trivial-types
                 :proper-list)
+  (:import-from :anaphora
+                :awhen
+                :it)
   ;; Classes
   (:export :documentation-node
            :operator-node
@@ -24,7 +27,8 @@
            :cffi-slot
            :cffi-struct
            :cffi-union
-           :cffi-enum)
+           :cffi-enum
+           :cffi-bitfield)
   ;; Accessors
   (:export ;; names and docstrings
            :node-name
@@ -42,7 +46,13 @@
            :record-slots
            :class-node-superclasses)
   ;; CFFI accessors
-  (:export :cffi-enum-variants)
+  (:export :cffi-function-return-type
+           :cffi-type-base-type
+           :cffi-slot-type
+           :cffi-struct-slots
+           :cffi-union-variants
+           :cffi-enum-variants
+           :cffi-bitfield-masks)
   ;; Methods
   (:export :symbol-external-p
            :symbol-package-name
@@ -57,5 +67,6 @@
   (:export :parse
            :do-packages
            :do-nodes
-           :query)
+           :query
+           :dump)
   (:documentation "Parse documentation from ASDF systems."))

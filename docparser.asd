@@ -8,6 +8,7 @@
   :source-control (:git "")
   :depends-on (:trivial-types
                :alexandria
+               :anaphora
                :cffi)
   :components ((:module "src"
                 :serial t
