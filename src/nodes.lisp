@@ -77,20 +77,26 @@
   (:documentation "A class or structure slot."))
 
 (defclass record-node (documentation-node)
-  ((slots :reader record-slots
-          :initarg :slots
-          :type (proper-list slot-node)
-          :documentation "A list of slots.")))
+  ()
+  (:documentation "The base class of all nodes representing record-like data
+  type definitions (i.e. structures, classes)."))
 
 (defclass struct-node (record-node)
-  ()
+  ((slots :reader record-slots
+          :initarg :slots
+          :type (proper-list struct-slot-node)
+          :documentation "A list of slots."))
   (:documentation "A structure."))
 
 (defclass class-node (record-node)
   ((superclasses :reader class-node-superclasses
                  :initarg :superclasses
                  :type (proper-list symbol)
-                 :documentation "A list of the class's superclasses (symbols)."))
+                 :documentation "A list of the class's superclasses (symbols).")
+   (slots :reader record-slots
+          :initarg :slots
+          :type (proper-list class-slot-node)
+          :documentation "A list of slots."))
   (:documentation "A class."))
 
 (defclass condition-node (class-node)
