@@ -2,24 +2,23 @@
 
 [![Build Status](https://travis-ci.org/eudoxia0/docparser.svg?branch=master)](https://travis-ci.org/eudoxia0/docparser)
 
-Extract documentation from Common Lisp systems.
+Extract documentation from Common Lisp systems. Used in the [Codex][codex]
+documentation generator.
 
 # Overview
 
-docparser is a library for extracting documentation from Common Lisp systems in
-a structured manner. It takes a system name and returns a set of objects
-representing packages, variables, functions, classes, etc. and their
-docstrings. It is used in the [Codex][codex] documentation generator.
-
-It's not yet another documentation generator. Rather, it simply provides the
-documentation extraction layer on top of which you can build a documentation
-generator.
-
 Documentation generators generally implement their own (ad hoc,
-informally-specified, etc.) version of docstring extraction. docparser is meant
-to extract as much information from a system as possible, and let documentation
-generators choose what to keep and discard. This minimizes duplication of effort
-and separates documentation extraction from generation.
+informally-specified, etc.) version of docstring extraction, and as a result,
+every documentation generator extracts a different subset of documentation.
+
+docparser isn't yet another documentation generator: it is a library for
+extracting documentation from Common Lisp systems in a structured manner so you
+can build a documentation generator on top of it. It takes a system name and
+returns a set of objects representing packages, variables, functions, classes,
+etc. and their docstrings. It is designed to extract as much information from
+systems as possible, and let documentation generators choose what to keep and
+discard. This minimizes duplication of effort and separates docstring extraction
+from generation.
 
 docparser has classes to represent every documentable Common Lisp construct:
 
@@ -33,8 +32,6 @@ docparser has classes to represent every documentable Common Lisp construct:
 * Conditions
 * Type definitions
 * Packages
-
-## CFFI Documentation
 
 Additionally, docparser has custom subclasses to represent the documentation of
 [CFFI][cffi] definitions:
