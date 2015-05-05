@@ -13,12 +13,12 @@ every documentation generator extracts a different subset of documentation.
 
 docparser isn't yet another documentation generator: it is a library for
 extracting documentation from Common Lisp systems in a structured manner so you
-can build a documentation generator on top of it. It takes a system name and
-returns a set of objects representing packages, variables, functions, classes,
-etc. and their docstrings. It is designed to extract as much information from
-systems as possible, and let documentation generators choose what to keep and
-discard. This minimizes duplication of effort and separates docstring extraction
-from generation.
+can build a documentation generator on top of it. It parses systems and returns
+a set of objects representing packages, variables, functions, classes, etc. and
+their docstrings. It is designed to extract as much information from systems as
+possible, and let documentation generators choose what to keep and discard. This
+minimizes duplication of effort and separates docstring extraction from
+generation.
 
 docparser has classes to represent every documentable Common Lisp construct:
 
