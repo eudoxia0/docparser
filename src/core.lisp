@@ -1,23 +1,33 @@
 (in-package :docparser)
 
-;;; Loading systems
+;;; Load-bearing hacks
 
 (defmacro with-ignored-errors (() &body body)
   "Catch and ignore certain errors."
   `(handler-case
-       (progn
-         ,@body)
+       (uiop:with-muffled-compiler-conditions ()
+         (uiop:with-muffled-loader-conditions ()
+           ,@body))
      (cffi:load-foreign-library-error ()
        (format t "Failed to load foreign library. Ignoring.~%"))
      (uiop:compile-file-error ()
-       (format t "Compilation error. Ignoring. ~%"))))
+       (format t "Compilation error. Ignoring. ~%"))
+     (asdf:load-system-definition-error ()
+       (format t "Error when loading the system definition. Ignoring.~%"))
+     (error (c)
+       (format t "Unknown error: ~A~%" c))))
+
+(defun ensure-preload (system-name)
+  #+quicklisp (with-ignored-errors ()
+                (ql:quickload system-name :silent t))
+  t)
+
+;;; Loading systems
 
 (defun load-system (system-name)
   "Load an ASDF system by name."
   (with-ignored-errors ()
-    (uiop:with-muffled-loader-conditions ()
-      (uiop:with-muffled-compiler-conditions ()
-        (asdf:compile-system system-name :verbose nil :force t)))))
+    (asdf:compile-system system-name :force t)))
 
 ;;; Indices
 
@@ -66,7 +76,7 @@
 
 ;;; Parsers
 
-(defparameter *parsers* (list)
+(defvar *parsers* (list)
   "A list of symbols to the functions used to parse their corresponding forms.")
 
 (defmacro define-parser (name (&rest lambda-list) &body body)
@@ -84,7 +94,7 @@
       (funcall parser (rest form)))))
 
 (defun parse-package-definition (form)
-  (let ((name (symbol-name (first form)))
+  (let ((name (princ-to-string (first form)))
         (docstring (second (find :documentation (rest form) :key #'first))))
     (make-instance 'package-index
                    :name name
@@ -92,12 +102,13 @@
 
 (defun parse-system (index system-name)
   "Parse a system."
+  (ensure-preload system-name)
   (let* ((old-macroexpander *macroexpand-hook*)
          (*macroexpand-hook*
            #'(lambda (function form environment)
                (when (listp form)
                  ;; Package nodes are special cases
-                 (if (eql (first form) 'cl:defpackage)
+                 (if (equal (first form) 'cl:defpackage)
                      ;; Parse the package definition, and add the new package
                      ;; index to the index
                      (let ((package-index (parse-package-definition (rest form))))
