@@ -124,4 +124,69 @@
       (is (equal (docparser:node-docstring (elt result 0))
                  "docstring")))))
 
+(def-suite load-systems)
+(in-suite load-systems)
+
+(test load-all-systems
+  (let* ((systems (list :1am
+                        :able
+                        :abnf
+                        :access
+                        :acl-compat
+                        :alexandria
+                        :amazon-ecs
+                        :anaphora
+                        :antik
+                        :arc-compat
+                        :archive
+                        :arnesi
+                        :array-utils
+                        :asdf-linguist
+                        :aserve
+                        :asn.1
+                        :babel
+                        :base
+                        :bibtex
+                        :binomial-heap
+                        :bknr.web
+                        :bordeaux-threads
+                        :btrie
+                        :caveman2
+                        :cells
+                        :chanl
+                        :cffi
+                        :checkl
+                        :chipz
+                        :chirp
+                        :cl-6502
+                        :cl-aa
+                        :cl-annot
+                        :cl-base64
+                        :cl-ca
+                        :cl-cairo2
+                        :cl-conspack
+                        :cl-csv
+                        :cl-fad))
+         (success-count 0)
+         (system-count (length systems))
+         (failures (list)))
+    (loop for system in systems do
+      (format t "~%Loading ~S~%" system)
+      (finishes
+        (let ((index (docparser:parse system))
+              (node-count 0))
+          (docparser:do-packages (package index)
+            (docparser:do-nodes (node package)
+              (incf node-count)))
+          (if (> node-count 0)
+            (progn
+              (incf success-count)
+              (is-true t))
+            (push system failures)))))
+    (format t "~&Succeeded ~A/~A systems. Failed: ~A"
+            success-count
+            system-count
+            failures)))
+
 (run! 'tests)
+(run! 'load-systems)
