@@ -34,7 +34,11 @@
   (:documentation "A macro."))
 
 (defclass generic-function-node (operator-node)
-  ()
+  ((setfp :reader operator-setf-p
+          :initarg :setfp
+          :initform nil
+          :type boolean
+          :documentation "Whether the generic function's methods are setf methods."))
   (:documentation "A generic function."))
 
 (defclass method-node (operator-node)
