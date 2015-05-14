@@ -60,8 +60,8 @@ external dependencies.
 
 # Usage
 
-To extract documentation from a system (Which doesn't need to be loaded, but
-*must* be accessible to ASDF, so Quickload it before), do this:
+To extract documentation from a system (which will be Quickloaded
+automatically), do this:
 
 ```lisp
 (docparser:parse :my-system-name)
