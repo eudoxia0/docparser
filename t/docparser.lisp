@@ -134,18 +134,13 @@
                         :access
                         :acl-compat
                         :alexandria
-                        :amazon-ecs
                         :anaphora
                         :antik
                         :arc-compat
                         :archive
-                        :arnesi
                         :array-utils
-                        :asdf-linguist
                         :aserve
-                        :asn.1
                         :babel
-                        :base
                         :bibtex
                         :binomial-heap
                         :bknr.web
