@@ -26,14 +26,29 @@
 (define-parser cl:defgeneric (name (&rest args) &rest options)
   (let ((docstring (second (find :documentation options :key #'first))))
     (make-instance 'generic-function-node
-                   :name name
+                   :name (if (listp name)
+                             ;; SETF name
+                             (second name)
+                             ;; Regular name
+                             name)
                    :docstring docstring
+                   :setfp (listp name)
                    :lambda-list args)))
 
-(define-parser cl:defmethod (name (&rest args) &rest body)
-  (let ((docstring (if (stringp (first body))
-                       (first body)
-                       nil)))
+(define-parser cl:defmethod (name args-or-specifier &rest body)
+  (let* ((kind (if (keywordp args-or-specifier)
+                  args-or-specifier
+                  :primary))
+         (args (if (keywordp args-or-specifier)
+                   (first body)
+                   args-or-specifier))
+         (body (if (keywordp args-or-specifier)
+                   (rest body)
+                   body))
+         (docstring (if (stringp (first body))
+                        (first body)
+                        nil)))
+    (declare (ignore kind))
     (make-instance 'method-node
                    :name (if (listp name)
                              ;; SETF name
@@ -70,28 +85,33 @@
                    :lambda-list lambda-list)))
 
 (defun parse-slot (slot)
-  (let ((slot (copy-list slot)))
-    (flet ((extract-all-and-delete (key)
-             (let ((out (list)))
-               (loop while (getf (rest slot) key) do
-                 (push (getf (rest slot) key) out)
-                 (remf (rest slot) key)))))
-      (let ((accessors (extract-all-and-delete :accessor))
-            (readers (extract-all-and-delete :reader))
-            (writers (extract-all-and-delete :writer)))
-        (destructuring-bind (name &key initarg initform type
-                                    (allocation :instance)
-                                    documentation)
-            slot
-          (declare (ignore initarg initform))
-          (make-instance 'class-slot-node
-                         :name name
-                         :docstring documentation
-                         :type type
-                         :allocation allocation
-                         :accessors accessors
-                         :readers readers
-                         :writers writers))))))
+  (if (listp slot)
+      (let ((slot (copy-list slot)))
+        (flet ((extract-all-and-delete (key)
+                 (let ((out (list)))
+                   (loop while (getf (rest slot) key) do
+                     (push (getf (rest slot) key) out)
+                     (remf (rest slot) key)))))
+          (let ((accessors (extract-all-and-delete :accessor))
+                (readers (extract-all-and-delete :reader))
+                (writers (extract-all-and-delete :writer)))
+            (destructuring-bind (name &key initarg initform type
+                                        (allocation :instance)
+                                        documentation
+                                        ;; For metaclass stuff
+                                        &allow-other-keys)
+                slot
+              (declare (ignore initarg initform))
+              (make-instance 'class-slot-node
+                             :name name
+                             :docstring documentation
+                             :type type
+                             :allocation allocation
+                             :accessors accessors
+                             :readers readers
+                             :writers writers)))))
+      (make-instance 'class-slot-node
+                     :name slot)))
 
 (define-parser cl:defclass (name superclasses slots &rest options)
   (let ((docstring (second (find :documentation options :key #'first))))
