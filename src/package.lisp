@@ -7,7 +7,8 @@
                 :awhen
                 :it)
   ;; Classes
-  (:export :documentation-node
+  (:export :name-node
+           :documentation-node
            :operator-node
            :function-node
            :macro-node
