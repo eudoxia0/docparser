@@ -33,6 +33,7 @@
            :cffi-bitfield)
   ;; Accessors
   (:export ;; names and docstrings
+           :node-form
            :node-name
            :node-docstring
            ;; Operators
