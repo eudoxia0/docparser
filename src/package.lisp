@@ -71,5 +71,6 @@
            :do-packages
            :do-nodes
            :query
-           :dump)
+           :dump
+           :*store-form*)
   (:documentation "Parse documentation from ASDF systems."))
