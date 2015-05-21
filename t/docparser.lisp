@@ -6,9 +6,7 @@
 ;;; Utilities
 
 (defmacro with-test-node ((node type name) &body body)
-  `(let* ((nodes (docparser::package-index-nodes
-                  (elt (docparser::index-packages *index*) 0)))
-          (,node (elt nodes current-node)))
+  `(let* ((,node (elt nodes current-node)))
      (is
       (typep ,node ',type))
      (is
@@ -42,7 +40,9 @@
               32)))))
 
 (test nodes
-  (let ((*index* (docparser:parse :docparser-test-system)))
+  (let* ((*index* (docparser:parse :docparser-test-system))
+         (nodes (docparser::package-index-nodes
+                 (elt (docparser::index-packages *index*) 0))))
     ;; Test that individual nodes were parsed properly
     (let ((current-node 0))
       ;; Variables
