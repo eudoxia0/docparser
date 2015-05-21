@@ -158,14 +158,10 @@
                         :alexandria
                         :anaphora
                         :antik
-                        :arc-compat
                         :archive
-                        :array-utils
                         :aserve
                         :babel
-                        :bibtex
                         :binomial-heap
-                        :bknr.web
                         :bordeaux-threads
                         :btrie
                         :caveman2
@@ -175,15 +171,12 @@
                         :checkl
                         :chipz
                         :chirp
-                        :cl-6502
                         :cl-aa
                         :cl-annot
                         :cl-base64
-                        :cl-ca
                         :cl-cairo2
                         :cl-conspack
-                        :cl-csv
-                        :cl-fad))
+                        :cl-csv))
          (success-count 0)
          (system-count (length systems))
          (failures (list)))
