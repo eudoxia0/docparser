@@ -150,31 +150,7 @@
 (in-suite load-systems)
 
 (test load-all-systems
-  (let* ((systems (list :1am
-                        :able
-                        :abnf
-                        :access
-                        :acl-compat
-                        :alexandria
-                        :anaphora
-                        :antik
-                        :archive
-                        :aserve
-                        :babel
-                        :binomial-heap
-                        :bordeaux-threads
-                        :btrie
-                        :caveman2
-                        :cells
-                        :chanl
-                        :cffi
-                        :checkl
-                        :chipz
-                        :chirp
-                        :cl-aa
-                        :cl-annot
-                        :cl-base64
-                        :cl-cairo2
+  (let* ((systems (list :alexandria
                         :cl-conspack
                         :cl-csv))
          (success-count 0)
