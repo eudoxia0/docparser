@@ -7,7 +7,8 @@
                 :awhen
                 :it)
   ;; Classes
-  (:export :documentation-node
+  (:export :name-node
+           :documentation-node
            :operator-node
            :function-node
            :macro-node
@@ -32,6 +33,7 @@
            :cffi-bitfield)
   ;; Accessors
   (:export ;; names and docstrings
+           :node-form
            :node-name
            :node-docstring
            ;; Operators
@@ -69,5 +71,6 @@
            :do-packages
            :do-nodes
            :query
-           :dump)
+           :dump
+           :*store-form*)
   (:documentation "Parse documentation from ASDF systems."))

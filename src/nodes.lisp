@@ -2,7 +2,10 @@
 (in-package :docparser)
 
 (defclass name-node ()
-  ((node-name :reader node-name
+  ((form :reader node-form
+         :initarg :form
+         :documentation "The original form.")
+   (node-name :reader node-name
               :initarg :name
               :type symbol
               :documentation "The symbol name of the operator, variable, or class."))

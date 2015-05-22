@@ -1,5 +1,10 @@
 (in-package :docparser)
 
+;;; Special variables
+
+(defvar *store-form* nil
+  "Whether or not to store, inside a node, the form it was parsed from.")
+
 ;;; Load-bearing hacks
 
 (defmacro with-ignored-errors (() &body body)
@@ -117,6 +122,8 @@
                      ;; Regular node, parse it
                      (let ((node (parse-form form)))
                        (when node
+                         (when *store-form*
+                           (setf (node-form node) form))
                          (add-node index node))
                        t))
                ;; Always pass the form to the old macroexpander. This ensures
