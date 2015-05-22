@@ -34,10 +34,7 @@
     (let ((package-index (elt (docparser::index-packages *index*) 0)))
       (is
        (equal (docparser::package-index-name package-index)
-              "DOCPARSER-TEST-SYSTEM"))
-      (is
-       (equal (length (docparser::package-index-nodes package-index))
-              32)))))
+              "DOCPARSER-TEST-SYSTEM")))))
 
 (test variable-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
@@ -121,8 +118,14 @@
          (nodes (docparser::package-index-nodes
                  (elt (docparser::index-packages *index*) 0)))
          (current-node 29))
+    ;; The `printf` function
+    (incf current-node 2)
     ;; The `size-t` CFFI type
     (with-test-node (node docparser:cffi-type "SIZE-T"))
+    ;; The `cstruct` struct
+    (incf current-node 2)
+    ;; The `cunion` union
+    (incf current-node 2)
     ;; The `nums` CFFI enum
     (with-test-node (node docparser:cffi-enum "NUMS")
       (is (equal (docparser:cffi-enum-variants node)
