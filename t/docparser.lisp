@@ -178,9 +178,11 @@
             failures)))
 
 (test printing
-  (docparser:do-packages (package (docparser:parse :docparser-test-system))
-    (docparser:do-nodes (node package)
-      (print node))))
+  (let ((*index* (docparser:parse :docparser-test-system)))
+    (docparser:do-packages (package *index*)
+      (docparser:do-nodes (node package)
+        (print node))
+      (docparser:dump *index*))))
 
 (run! 'tests)
 (run! 'load-systems)
