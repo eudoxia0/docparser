@@ -177,5 +177,10 @@
             system-count
             failures)))
 
+(test printing
+  (docparser:do-packages (package (docparser:parse :docparser-test-system))
+    (docparser:do-nodes (node package)
+      (print node))))
+
 (run! 'tests)
 (run! 'load-systems)
