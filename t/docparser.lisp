@@ -125,7 +125,7 @@
     ;; The `cstruct` struct
     (incf current-node 2)
     ;; The `cunion` union
-    (incf current-node 2)
+    (incf current-node 1)
     ;; The `nums` CFFI enum
     (with-test-node (node docparser:cffi-enum "NUMS")
       (is (equal (docparser:cffi-enum-variants node)
