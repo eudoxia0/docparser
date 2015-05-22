@@ -184,5 +184,10 @@
         (print node))
       (docparser:dump *index*))))
 
+(test utils
+  (is-true (docparser:symbol-external-p 'docparser:render-humanize))
+  (is (equal (docparser:render-humanize 'docparser:render-humanize)
+             "render-humanize")))
+
 (run! 'tests)
 (run! 'load-systems)
