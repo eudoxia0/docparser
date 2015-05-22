@@ -46,9 +46,7 @@
                 :reader s-slot
                 :initarg :second-slot
                 :documentation "docstring")
-   (unexported-slot :reader unexported-slot
-                    :initarg :unexported-slot
-                    :documentation "docstring"))
+   third-slot)
   (:documentation "docstring"))
 
 (defgeneric test-method (obj a)
@@ -69,7 +67,21 @@
 
 ;;; CFFI stuff
 
+(cffi:defcfun printf :int
+  "docstring"
+  (control :string) &rest)
+
 (cffi:defctype size-t :unsigned-long "docstring")
+
+(cffi:defcstruct cstruct
+  "docstring"
+  (a :int)
+  (b :double))
+
+(cffi:defcunion cunion
+  "docstring"
+  (a :int)
+  (b :double))
 
 (cffi:defcenum nums "docstring" :a :b (:c 3))
 
