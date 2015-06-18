@@ -72,10 +72,11 @@
   "Add a node to an index, finding the proper package index."
   (let* ((symbol (node-name node))
          (symbol-package (docparser:symbol-package-name symbol))
-         (package-index (find symbol-package
-                              (index-packages index)
-                              :test #'equal
-                              :key #'package-index-name)))
+         (package-index (when symbol-package
+                          (find symbol-package
+                                (index-packages index)
+                                :test #'equal
+                                :key #'package-index-name))))
     (when package-index
       (vector-push-extend node (package-index-nodes package-index)))))
 
