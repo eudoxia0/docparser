@@ -12,7 +12,10 @@
   `(handler-case
        (uiop:with-muffled-compiler-conditions ()
          (uiop:with-muffled-loader-conditions ()
-           ,@body))
+           (handler-bind ((warning (lambda (c)
+                                     (declare (ignore c))
+                                     (muffle-warning))))
+             ,@body)))
      (cffi:load-foreign-library-error ()
        (format t "Failed to load foreign library. Ignoring.~%"))
      (uiop:compile-file-error ()
