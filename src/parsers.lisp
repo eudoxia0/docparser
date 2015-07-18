@@ -91,7 +91,8 @@
                  (let ((out (list)))
                    (loop while (getf (rest slot) key) do
                      (push (getf (rest slot) key) out)
-                     (remf (rest slot) key)))))
+                     (remf (rest slot) key))
+                   out)))
           (let ((accessors (extract-all-and-delete :accessor))
                 (readers (extract-all-and-delete :reader))
                 (writers (extract-all-and-delete :writer)))
