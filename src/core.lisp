@@ -190,3 +190,14 @@ symbol of a class name. If none are found, return NIL."
                      (if class
                          (typep node class)
                          t)))))
+
+;;; Documentation coverage
+
+(defun coverage (index)
+  "Return an alist of classes to the pair (documented nodes . total nodes of
+that class."
+  (let ((classes (list)))
+    (do-packages (package index)
+      (do-nodes (node index)
+        (pushnew (class-of node) classes)))
+    t))
