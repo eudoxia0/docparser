@@ -12,7 +12,10 @@
   `(handler-case
        (uiop:with-muffled-compiler-conditions ()
          (uiop:with-muffled-loader-conditions ()
-           ,@body))
+           (handler-bind ((warning (lambda (c)
+                                     (declare (ignore c))
+                                     (muffle-warning))))
+             ,@body)))
      (cffi:load-foreign-library-error ()
        (format t "Failed to load foreign library. Ignoring.~%"))
      (uiop:compile-file-error ()
@@ -72,10 +75,11 @@
   "Add a node to an index, finding the proper package index."
   (let* ((symbol (node-name node))
          (symbol-package (docparser:symbol-package-name symbol))
-         (package-index (find symbol-package
-                              (index-packages index)
-                              :test #'equal
-                              :key #'package-index-name)))
+         (package-index (when symbol-package
+                          (find symbol-package
+                                (index-packages index)
+                                :test #'equal
+                                :key #'package-index-name))))
     (when package-index
       (vector-push-extend node (package-index-nodes package-index)))))
 
