@@ -49,6 +49,12 @@
    third-slot)
   (:documentation "docstring"))
 
+(define-condition test-condition ()
+  ((first-slot :accessor first-slot
+               :initarg :first-slot
+               :documentation "docstring"))
+  (:documentation "docstring"))
+
 (defgeneric test-method (obj a)
   (:documentation "docstring"))
 

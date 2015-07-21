@@ -91,13 +91,26 @@
                 "FIRST-SLOT"))
         (is
          (equal (docparser:node-docstring first-slot)
+                "docstring"))))
+    ;; The `test-condition` condition
+    (with-test-node (node docparser:condition-node "TEST-CONDITION")
+      (is (equal (length (docparser:record-slots node))
+                 1))
+      (let ((first-slot (first (docparser:record-slots node))))
+        (is
+         (typep first-slot 'docparser:class-slot-node))
+        (is
+         (equal (symbol-name (docparser:node-name first-slot))
+                "FIRST-SLOT"))
+        (is
+         (equal (docparser:node-docstring first-slot)
                 "docstring"))))))
 
 (test method-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
          (nodes (docparser::package-index-nodes
                  (elt (docparser::index-packages *index*) 0)))
-         (current-node 25))
+         (current-node 26))
     ;; The `test-method` defgeneric
     (incf current-node)
     ;; The `test-method` method
@@ -117,7 +130,7 @@
   (let* ((*index* (docparser:parse :docparser-test-system))
          (nodes (docparser::package-index-nodes
                  (elt (docparser::index-packages *index*) 0)))
-         (current-node 29))
+         (current-node 30))
     ;; The `printf` function
     (incf current-node 2)
     ;; The `size-t` CFFI type
@@ -149,6 +162,18 @@
       (is (equal (docparser:node-docstring (elt result 0))
                  "docstring")))))
 
+(test printing
+  (let ((*index* (docparser:parse :docparser-test-system)))
+    (docparser:do-packages (package *index*)
+      (docparser:do-nodes (node package)
+        (print node))
+      (docparser:dump *index*))))
+
+(test utils
+  (is-true (docparser:symbol-external-p 'docparser:render-humanize))
+  (is (equal (docparser:render-humanize 'docparser:render-humanize)
+             "render-humanize")))
+
 (def-suite load-systems)
 (in-suite load-systems)
 
@@ -176,18 +201,6 @@
             success-count
             system-count
             failures)))
-
-(test printing
-  (let ((*index* (docparser:parse :docparser-test-system)))
-    (docparser:do-packages (package *index*)
-      (docparser:do-nodes (node package)
-        (print node))
-      (docparser:dump *index*))))
-
-(test utils
-  (is-true (docparser:symbol-external-p 'docparser:render-humanize))
-  (is (equal (docparser:render-humanize 'docparser:render-humanize)
-             "render-humanize")))
 
 (run! 'tests)
 (run! 'load-systems)
