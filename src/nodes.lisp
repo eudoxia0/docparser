@@ -183,13 +183,6 @@
     (when package
       (package-name package))))
 
-(defun render-full-symbol (symbol)
-  "Render a symbol into a string."
-  (concatenate 'string
-               (package-name (symbol-package symbol))
-               ":"
-               (symbol-name symbol)))
-
 (defun render-humanize (symbol)
   "Render a symbol into a string in a human-friendly way."
   (string-downcase (symbol-name symbol)))

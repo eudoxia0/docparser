@@ -59,7 +59,6 @@
   ;; Methods
   (:export :symbol-external-p
            :symbol-package-name
-           :render-full-symbol
            :render-humanize)
   ;; Indices
   (:export :package-index
