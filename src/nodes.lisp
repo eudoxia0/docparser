@@ -49,7 +49,10 @@
           :initarg :setfp
           :initform nil
           :type boolean
-          :documentation "Whether the method is a setf method."))
+          :documentation "Whether the method is a setf method.")
+   (qualifiers :reader method-qualifiers
+               :initarg :qualifiers
+               :initform nil))
   (:documentation "A method."))
 
 (defclass variable-node (documentation-node)

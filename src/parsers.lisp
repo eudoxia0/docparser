@@ -35,20 +35,19 @@
                    :setfp (listp name)
                    :lambda-list args)))
 
-(define-parser cl:defmethod (name args-or-specifier &rest body)
-  (let* ((kind (if (keywordp args-or-specifier)
-                  args-or-specifier
-                  :primary))
-         (args (if (keywordp args-or-specifier)
-                   (first body)
-                   args-or-specifier))
-         (body (if (keywordp args-or-specifier)
-                   (rest body)
-                   body))
-         (docstring (if (stringp (first body))
-                        (first body)
-                        nil)))
-    (declare (ignore kind))
+(define-parser cl:defmethod (name &rest args)
+  (let* ((lambda-list-pos (position-if #'listp args))
+         (qualifiers (subseq args 0 lambda-list-pos))
+         (lambda-list (nth lambda-list-pos args))
+         (body (subseq args (1+ lambda-list-pos)))
+         (docstring
+           (loop for exp in body
+                 if (and (not (stringp exp))
+                         (not (listp exp))
+                         (eq (car exp) 'cl:declare))
+                   do (return)
+                 else if (stringp exp)
+                        do (return exp))))
     (make-instance 'method-node
                    :name (if (listp name)
                              ;; SETF name
@@ -56,8 +55,9 @@
                              ;; Regular name
                              name)
                    :docstring docstring
+                   :qualifiers qualifiers
                    :setfp (listp name)
-                   :lambda-list args)))
+                   :lambda-list lambda-list)))
 
 (defun parse-var (form)
   (destructuring-bind (name &optional initial-value docstring) form
