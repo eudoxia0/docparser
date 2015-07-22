@@ -39,6 +39,8 @@
            ;; Operators
            :operator-lambda-list
            :operator-setf-p
+           ;; Variables
+           :variable-initial-value
            ;; Slots
            :slot-accessors
            :slot-readers

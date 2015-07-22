@@ -53,7 +53,8 @@
   (:documentation "A method."))
 
 (defclass variable-node (documentation-node)
-  ()
+  ((variable-initial-value :reader variable-initial-value
+                           :initarg :initial-value))
   (:documentation "A variable."))
 
 (defclass struct-slot-node (name-node)
