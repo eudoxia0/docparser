@@ -60,11 +60,13 @@
                    :lambda-list lambda-list)))
 
 (defun parse-var (form)
-  (destructuring-bind (name &optional initial-value docstring) form
-    (declare (ignore initial-value))
-    (make-instance 'variable-node
-                   :name name
-                   :docstring docstring)))
+  (destructuring-bind (name &optional (initial-value nil initial-value-specified-p) docstring) form
+    (apply #'make-instance 'variable-node
+           :name name
+           :docstring docstring
+           (if initial-value-specified-p
+               (list :initial-value initial-value)
+               '()))))
 
 (define-parser cl:defparameter (&rest form)
   (parse-var form))
