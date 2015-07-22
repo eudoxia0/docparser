@@ -39,6 +39,8 @@
            ;; Operators
            :operator-lambda-list
            :operator-setf-p
+           ;; Methods
+           :method-qualifiers
            ;; Slots
            :slot-accessors
            :slot-readers
