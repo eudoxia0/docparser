@@ -117,7 +117,8 @@
            #'(lambda (function form environment)
                (when (listp form)
                  ;; Package nodes are special cases
-                 (if (equal (first form) 'cl:defpackage)
+                 (if (or (equal (first form) 'cl:defpackage)
+                         (equal (first form) 'uiop:define-package))
                      ;; Parse the package definition, and add the new package
                      ;; index to the index
                      (let ((package-index (parse-package-definition (rest form))))
