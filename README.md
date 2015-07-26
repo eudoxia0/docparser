@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/eudoxia0/docparser/badge.svg?branch=master)](https://coveralls.io/r/eudoxia0/docparser?branch=master)
 
 Extract documentation from Common Lisp systems. Used in the [Codex][codex]
-documentation generator.
+documentation generator and [Quickdocs][qd].
 
 # Overview
 
@@ -51,6 +51,7 @@ properly load the library. This is useful for documenting libraries with complex
 external dependencies.
 
 [codex]: https://github.com/CommonDoc/codex
+[qd]: http://quickdocs.org/
 [cffi]: https://github.com/cffi/cffi
 [defcfun]: https://common-lisp.net/project/cffi/manual/cffi-manual.html#defcfun
 [defctype]: https://common-lisp.net/project/cffi/manual/cffi-manual.html#defctype
