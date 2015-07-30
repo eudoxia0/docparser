@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/eudoxia0/docparser.svg?branch=master)](https://travis-ci.org/eudoxia0/docparser)
 [![Coverage Status](https://coveralls.io/repos/eudoxia0/docparser/badge.svg?branch=master)](https://coveralls.io/r/eudoxia0/docparser?branch=master)
+[![Quicklisp badge](http://quickdocs.org/badge/docparser.svg)](http://quickdocs.org/docparser/)
 
 Extract documentation from Common Lisp systems. Used in the [Codex][codex]
 documentation generator and [Quickdocs][qd].
