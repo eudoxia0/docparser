@@ -1,9 +1,18 @@
 (in-package :docparser)
 
+(defun extract-docstring (body)
+  "Extract the docstring from the body of a form.
+Correctly handles bodies where the first form is a declaration."
+  (loop for exp in body
+     if (and (not (stringp exp))
+             (not (and (listp exp)
+                       (eq (car exp) 'cl:declare))))
+     do (return)
+     else if (stringp exp)
+     do (return exp)))
+
 (define-parser cl:defun (name (&rest args) &rest body)
-  (let ((docstring (if (stringp (first body))
-                       (first body)
-                       nil)))
+  (let ((docstring (extract-docstring body)))
     (make-instance 'function-node
                    :name (if (listp name)
                              ;; SETF name
@@ -15,9 +24,7 @@
                    :lambda-list args)))
 
 (define-parser cl:defmacro (name (&rest args) &rest body)
-  (let ((docstring (if (stringp (first body))
-                       (first body)
-                       nil)))
+  (let ((docstring (extract-docstring body)))
     (make-instance 'macro-node
                    :name name
                    :docstring docstring
@@ -40,14 +47,7 @@
          (qualifiers (subseq args 0 lambda-list-pos))
          (lambda-list (nth lambda-list-pos args))
          (body (subseq args (1+ lambda-list-pos)))
-         (docstring
-           (loop for exp in body
-                 if (and (not (stringp exp))
-                         (not (listp exp))
-                         (eq (car exp) 'cl:declare))
-                   do (return)
-                 else if (stringp exp)
-                        do (return exp))))
+         (docstring (extract-docstring body)))
     (make-instance 'method-node
                    :name (if (listp name)
                              ;; SETF name
