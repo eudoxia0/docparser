@@ -76,4 +76,6 @@
            :query
            :dump
            :*store-form*)
+  ;; Helper functions
+  (:export :extract-docstring)
   (:documentation "Parse documentation from ASDF systems."))
