@@ -17,6 +17,12 @@
      ,@body
      (incf current-node)))
 
+(defmacro test-node-equality (nodes)
+  (let ((node (gensym)))
+    `(loop for ,node across ,nodes do
+      (is-true
+       (docparser:node= ,node ,node)))))
+
 ;;; Tests
 
 (def-suite tests
@@ -46,7 +52,8 @@
     (with-test-node (node docparser:variable-node "VAR2")
       t)
     (with-test-node (node docparser:variable-node "CONST")
-      t)))
+      t)
+    (test-node-equality nodes)))
 
 (test operator-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
@@ -62,7 +69,8 @@
     (with-test-node (node docparser:macro-node "MAC")
       (is
        (equal (length (docparser:operator-lambda-list node))
-              3)))))
+              3)))
+    (test-node-equality nodes)))
 
 (test type-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
@@ -104,7 +112,8 @@
                 "FIRST-SLOT"))
         (is
          (equal (docparser:node-docstring first-slot)
-                "docstring"))))))
+                "docstring"))))
+    (test-node-equality nodes)))
 
 (test method-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
@@ -124,7 +133,8 @@
     (with-test-node (node docparser:function-node "HIDDEN-FUNCTION")
       (is
        (equal (length (docparser:operator-lambda-list node))
-              0)))))
+              0)))
+    (test-node-equality nodes)))
 
 (test cffi-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
@@ -146,7 +156,8 @@
     ;; The `bits` CFFI bitfield
     (with-test-node (node docparser:cffi-bitfield "BITS")
       (is (equal (docparser:cffi-bitfield-masks node)
-                 (list :a :b :c))))))
+                 (list :a :b :c))))
+    (test-node-equality nodes)))
 
 (test queries
   (let ((*index* (docparser:parse :docparser-test-system)))

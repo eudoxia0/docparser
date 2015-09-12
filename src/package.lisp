@@ -63,7 +63,8 @@
   ;; Methods
   (:export :symbol-external-p
            :symbol-package-name
-           :render-humanize)
+           :render-humanize
+           :node=)
   ;; Indices
   (:export :package-index
            :index

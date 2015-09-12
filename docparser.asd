@@ -15,6 +15,7 @@
                 :components
                 ((:file "package")
                  (:file "nodes")
+                 (:file "equal")
                  (:file "core")
                  (:file "parsers")
                  (:file "print"))))

@@ -122,6 +122,7 @@
                      ;; Parse the package definition, and add the new package
                      ;; index to the index
                      (let ((package-index (parse-package-definition (rest form))))
+                       (format t "~%Package: ~A" (first (rest form)))
                        (add-package-index index package-index)
                        t)
                      ;; Regular node, parse it
