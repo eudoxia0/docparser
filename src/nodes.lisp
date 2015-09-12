@@ -21,15 +21,16 @@
 (defclass operator-node (documentation-node)
  ((lambda-list :reader operator-lambda-list
                :initarg :lambda-list
-               :documentation "The operator's lambda list."))
+               :documentation "The operator's lambda list.")
+  (setfp :reader operator-setf-p
+         :initarg :setfp
+         :initform nil
+         :type boolean
+         :documentation "Whether the operator is a setf operation."))
   (:documentation "The base class of functions and macros."))
 
 (defclass function-node (operator-node)
-  ((setfp :reader operator-setf-p
-          :initarg :setfp
-          :initform nil
-          :type boolean
-          :documentation "Whether the function is a setf function."))
+  ()
   (:documentation "A function."))
 
 (defclass macro-node (operator-node)
@@ -37,20 +38,11 @@
   (:documentation "A macro."))
 
 (defclass generic-function-node (operator-node)
-  ((setfp :reader operator-setf-p
-          :initarg :setfp
-          :initform nil
-          :type boolean
-          :documentation "Whether the generic function's methods are setf methods."))
+  ()
   (:documentation "A generic function."))
 
 (defclass method-node (operator-node)
-  ((setfp :reader operator-setf-p
-          :initarg :setfp
-          :initform nil
-          :type boolean
-          :documentation "Whether the method is a setf method.")
-   (qualifiers :reader method-qualifiers
+  ((qualifiers :reader method-qualifiers
                :initarg :qualifiers
                :initform nil))
   (:documentation "A method."))
