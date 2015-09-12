@@ -30,6 +30,14 @@ Correctly handles bodies where the first form is a declaration."
                    :docstring docstring
                    :lambda-list args)))
 
+(define-parser cl:define-setf-expander (name (&rest args) &rest body)
+  (let ((docstring (extract-docstring body)))
+    (make-instance 'macro-node
+                   :name name
+                   :docstring docstring
+                   :lambda-list args
+                   :setfp t)))
+
 (define-parser cl:defgeneric (name (&rest args) &rest options)
   (let ((docstring (second (find :documentation options :key #'first))))
     (make-instance 'generic-function-node
