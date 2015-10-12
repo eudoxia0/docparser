@@ -1,6 +1,8 @@
 (in-package :cl-user)
 (defpackage docparser-test
-  (:use :cl :fiveam))
+  (:use :cl :fiveam)
+  (:export :run-tests)
+  (:documentation "docparser tests."))
 (in-package :docparser-test)
 
 ;;; Utilities
@@ -213,5 +215,6 @@
             system-count
             failures)))
 
-(run! 'tests)
-(run! 'load-systems)
+(defun run-tests ()
+  (run! 'tests)
+  (run! 'load-systems))
