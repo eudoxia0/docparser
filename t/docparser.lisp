@@ -187,7 +187,8 @@
   (is (equal (docparser:render-humanize 'docparser:render-humanize)
              "render-humanize")))
 
-(def-suite load-systems)
+(def-suite load-systems
+  :description "Test docparser on real-world systems.")
 (in-suite load-systems)
 
 (test load-all-systems
