@@ -67,9 +67,27 @@
              :documentation "A vector of package indices."))
   (:documentation "Holds system documentation, and the internal package indices."))
 
+(defmacro do-packages ((package index) &body body)
+  "Iterate over every package in the index."
+  `(loop for ,package across (index-packages ,index) do
+     ,@body))
+
+(defmacro do-nodes ((node package-index) &body body)
+  "Iterate over every node in a package index."
+  `(loop for ,node across (package-index-nodes ,package-index) do
+     ,@body))
+
 (defun add-package-index (index package-index)
   (unless (find-package-index index (package-index-name package-index))
     (vector-push-extend package-index (index-packages index))))
+
+(defun node-exists-p (index node)
+  "Does the node exist in the package index."
+  (do-packages (package index)
+    (do-nodes (test-node package)
+      (when (node= test-node node)
+        (return-from node-exists-p t))))
+  nil)
 
 (defun add-node (index node)
   "Add a node to an index, finding the proper package index."
@@ -81,7 +99,8 @@
                                 :test #'equal
                                 :key #'package-index-name))))
     (when package-index
-      (vector-push-extend node (package-index-nodes package-index)))))
+      (unless (node-exists-p index node)
+        (vector-push-extend node (package-index-nodes package-index))))))
 
 ;;; Parsers
 
@@ -150,16 +169,6 @@
           (parse-system index name))
         (parse-system index system-or-list))
     index))
-
-(defmacro do-packages ((package index) &body body)
-  "Iterate over every package in the index."
-  `(loop for ,package across (index-packages ,index) do
-     ,@body))
-
-(defmacro do-nodes ((node package-index) &body body)
-  "Iterate over every node in a package index."
-  `(loop for ,node across (package-index-nodes ,package-index) do
-     ,@body))
 
 (defun find-package-index (index package-name)
   "Return the package-index with that name, or NIL."
