@@ -71,6 +71,11 @@
 
 (indirectly-define-function)
 
+(defun local-symbol-macro ()
+  (flet (((setf thing) (new-value) new-value))
+    (symbol-macrolet ((thing (thing)))
+      (setf thing 1))))
+
 ;;; CFFI stuff
 
 (cffi:defcfun printf :int

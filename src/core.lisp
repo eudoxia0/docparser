@@ -150,13 +150,13 @@
                          (when *store-form*
                            (setf (node-form node) form))
                          (add-node index node))
-                       t))
+                       t)))
                ;; Always pass the form to the old macroexpander. This ensures
                ;; the system is loaded properly.
                (funcall old-macroexpander
                         function
                         form
-                        environment)))))
+                        environment))))
     (load-system system-name)))
 
 ;;; External interface
