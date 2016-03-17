@@ -72,6 +72,7 @@
            :package-index-docstring)
   ;; Interface
   (:export :parse
+           :define-parser
            :do-packages
            :do-nodes
            :query
