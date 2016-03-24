@@ -93,12 +93,25 @@
     (with-test-node (node docparser:class-node "TEST-CLASS")
       (is (equal (length (docparser:record-slots node))
                  3))
-      (let ((first-slot (first (docparser:record-slots node))))
+      (let ((first-slot (first (docparser:record-slots node)))
+            (second-slot (second (docparser:record-slots node))))
         (is
          (typep first-slot 'docparser:class-slot-node))
         (is
          (equal (symbol-name (docparser:node-name first-slot))
                 "FIRST-SLOT"))
+        (is
+          (equal :first-slot
+                 (docparser:slot-initarg first-slot)))
+        (is
+          (equal (list nil nil)
+                 (multiple-value-list (docparser:slot-initform first-slot))))
+        (is
+          (equal :second-slot
+                 (docparser:slot-initarg second-slot)))
+        (is
+          (equal (list "initform" t)
+                 (multiple-value-list (docparser:slot-initform second-slot))))
         (is
          (equal (docparser:node-docstring first-slot)
                 "docstring"))))
