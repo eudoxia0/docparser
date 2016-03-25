@@ -28,10 +28,6 @@ script:
   - ros -e '(ql:quickload (list :fiveam :cl-coveralls :docparser-test))'
         -e '(setf fiveam:*debug-on-error* t
                   fiveam:*debug-on-failure* t)'
-        -e '(setf *debugger-hook*
-                  (lambda (c h)
-                    (declare (ignore c h))
-                    (uiop:quit -1)))'
         -e '(coveralls:with-coveralls (:exclude (list "t"))
               (docparser-test:run-tests))'
 
