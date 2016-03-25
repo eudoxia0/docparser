@@ -41,12 +41,13 @@
 (defclass test-class ()
   ((first-slot :accessor first-slot
                :initarg :first-slot
-               :documentation "docstring")
+               :documentation "first docstring"
+               :allocation :class)
    (second-slot :reader second-slot
                 :reader s-slot
                 :initarg :second-slot
                 :initform "initform"
-                :documentation "docstring")
+                :documentation "second docstring")
    third-slot)
   (:documentation "docstring"))
 

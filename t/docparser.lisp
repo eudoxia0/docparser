@@ -95,6 +95,7 @@
                  3))
       (let ((first-slot (first (docparser:record-slots node)))
             (second-slot (second (docparser:record-slots node))))
+        ;; First slot tests
         (is
          (typep first-slot 'docparser:class-slot-node))
         (is
@@ -107,14 +108,22 @@
           (equal (list nil nil)
                  (multiple-value-list (docparser:slot-initform first-slot))))
         (is
+         (equal (docparser:node-docstring first-slot)
+                "first docstring"))
+        (is
+         (eq (docparser:slot-allocation first-slot) :class))
+        ;; Second slot
+        (is
           (equal :second-slot
                  (docparser:slot-initarg second-slot)))
         (is
           (equal (list "initform" t)
                  (multiple-value-list (docparser:slot-initform second-slot))))
         (is
-         (equal (docparser:node-docstring first-slot)
-                "docstring"))))
+         (equal (docparser:node-docstring second-slot)
+                "second docstring"))
+        (is
+         (eq (docparser:slot-allocation second-slot) :instance))))
     ;; The `test-condition` condition
     (with-test-node (node docparser:condition-node "TEST-CONDITION")
       (is (equal (length (docparser:record-slots node))
