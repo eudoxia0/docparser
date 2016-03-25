@@ -72,12 +72,25 @@
    (type :reader slot-type
          :initarg :type
          :documentation "The slot's type.")
+   (initarg :reader slot-initarg
+            :initarg :initarg
+            :documentation "The slot's initarg.")
+   (initform :initarg :initform
+             :documentation "The slot's initform.")
    (allocation :reader slot-allocation
                :initarg :allocation
                :initform :instance
                :type keyword
                :documentation "The slot's allocation type."))
   (:documentation "A class or structure slot."))
+
+(defun slot-initform (class-slot-node)
+  "Return the initform for the slot.
+Also returns a second boolean value indicating whether the slot has an initform,
+so an initform of NIL can be distinguished from not having an initform at all."
+  (if (slot-boundp class-slot-node 'initform)
+    (values (slot-value class-slot-node 'initform) t)
+    (values nil nil)))
 
 (defclass record-node (documentation-node)
   ()

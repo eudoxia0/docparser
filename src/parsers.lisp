@@ -112,15 +112,18 @@ Correctly handles bodies where the first form is a declaration."
                                         ;; For metaclass stuff
                                         &allow-other-keys)
                 slot
-              (declare (ignore initarg initform))
-              (make-instance 'class-slot-node
-                             :name name
-                             :docstring documentation
-                             :type type
-                             :allocation allocation
-                             :accessors accessors
-                             :readers readers
-                             :writers writers)))))
+              (let ((node (make-instance 'class-slot-node
+                                         :name name
+                                         :docstring documentation
+                                         :type type
+                                         :allocation allocation
+                                         :accessors accessors
+                                         :readers readers
+                                         :writers writers
+                                         :initarg initarg)))
+                (when (member :initform slot)
+                  (setf (slot-value node 'initform) initform))
+                node)))))
       (make-instance 'class-slot-node
                      :name slot)))
 

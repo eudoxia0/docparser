@@ -45,6 +45,7 @@
    (second-slot :reader second-slot
                 :reader s-slot
                 :initarg :second-slot
+                :initform "initform"
                 :documentation "docstring")
    third-slot)
   (:documentation "docstring"))

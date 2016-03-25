@@ -47,6 +47,9 @@
        (equal (slot-writers a) (slot-writers b))
        (equal (slot-or-nil a 'type) (slot-or-nil b 'type))
        (eq (slot-allocation a) (slot-allocation b))
+       (equal (slot-or-nil a 'initarg) (slot-or-nil b 'initarg))
+       (equal (multiple-value-list (slot-initform a))
+              (multiple-value-list (slot-initform b)))
        (call-next-method)))
 
 (define-equality (a b struct-node)

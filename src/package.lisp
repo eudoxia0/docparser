@@ -49,6 +49,8 @@
            :slot-writers
            :slot-type
            :slot-allocation
+           :slot-initarg
+           :slot-initform
            ;; Records and classes
            :record-slots
            :class-node-superclasses)
