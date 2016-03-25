@@ -50,6 +50,8 @@
            :slot-writers
            :slot-type
            :slot-allocation
+           :slot-initarg
+           :slot-initform
            ;; Records and classes
            :record-slots
            :class-node-superclasses)
@@ -73,6 +75,7 @@
            :package-index-docstring)
   ;; Interface
   (:export :parse
+           :define-parser
            :do-packages
            :do-nodes
            :query

@@ -45,6 +45,7 @@
    (second-slot :reader second-slot
                 :reader s-slot
                 :initarg :second-slot
+                :initform "initform"
                 :documentation "docstring")
    third-slot)
   (:documentation "docstring"))
@@ -70,6 +71,11 @@
      t))
 
 (indirectly-define-function)
+
+(defun local-symbol-macro ()
+  (flet (((setf thing) (new-value) new-value))
+    (symbol-macrolet ((thing (thing)))
+      (setf thing 1))))
 
 ;;; CFFI stuff
 
