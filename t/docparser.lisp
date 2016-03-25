@@ -12,10 +12,10 @@
      (is
       (typep ,node ',type))
      (is
-      (equal (symbol-name (docparser:node-name ,node))
-             ,name))
-     (is (equal (docparser:node-docstring ,node)
-                "docstring"))
+      (string= (symbol-name (docparser:node-name ,node))
+               ,name))
+     (is (string= (docparser:node-docstring ,node)
+                  "docstring"))
      ,@body
      (incf current-node)))
 
@@ -37,12 +37,12 @@
   (let ((*index* (docparser:parse :docparser-test-system)))
     ;; Test the package
     (is
-     (equal (length (docparser::index-packages *index*))
-            1))
+     (= (length (docparser::index-packages *index*))
+        1))
     (let ((package-index (elt (docparser::index-packages *index*) 0)))
       (is
-       (equal (docparser::package-index-name package-index)
-              "DOCPARSER-TEST-SYSTEM")))))
+       (string= (docparser::package-index-name package-index)
+                "DOCPARSER-TEST-SYSTEM")))))
 
 (test variable-nodes
   (let* ((*index* (docparser:parse :docparser-test-system))
@@ -65,13 +65,13 @@
     ;; The `func` function
     (with-test-node (node docparser:function-node "FUNC")
       (is
-       (equal (length (docparser:operator-lambda-list node))
-              5)))
+       (= (length (docparser:operator-lambda-list node))
+          5)))
     ;; The `mac` macro
     (with-test-node (node docparser:macro-node "MAC")
       (is
-       (equal (length (docparser:operator-lambda-list node))
-              3)))
+       (= (length (docparser:operator-lambda-list node))
+          3)))
     (test-node-equality nodes)))
 
 (test type-nodes
@@ -91,19 +91,19 @@
     (with-test-node (node docparser:type-node "CUSTOM-STRING"))
     ;; The `test-class` class
     (with-test-node (node docparser:class-node "TEST-CLASS")
-      (is (equal (length (docparser:record-slots node))
-                 3))
+      (is (= (length (docparser:record-slots node))
+             3))
       (let ((first-slot (first (docparser:record-slots node)))
             (second-slot (second (docparser:record-slots node))))
         ;; First slot tests
         (is
          (typep first-slot 'docparser:class-slot-node))
         (is
-         (equal (symbol-name (docparser:node-name first-slot))
-                "FIRST-SLOT"))
+         (string= (symbol-name (docparser:node-name first-slot))
+                  "FIRST-SLOT"))
         (is
-          (equal :first-slot
-                 (docparser:slot-initarg first-slot)))
+          (eq :first-slot
+              (docparser:slot-initarg first-slot)))
         (is
           (equal (list nil nil)
                  (multiple-value-list (docparser:slot-initform first-slot))))
@@ -114,29 +114,29 @@
          (eq (docparser:slot-allocation first-slot) :class))
         ;; Second slot
         (is
-          (equal :second-slot
-                 (docparser:slot-initarg second-slot)))
+          (eq :second-slot
+              (docparser:slot-initarg second-slot)))
         (is
           (equal (list "initform" t)
                  (multiple-value-list (docparser:slot-initform second-slot))))
         (is
-         (equal (docparser:node-docstring second-slot)
-                "second docstring"))
+         (string= (docparser:node-docstring second-slot)
+                  "second docstring"))
         (is
          (eq (docparser:slot-allocation second-slot) :instance))))
     ;; The `test-condition` condition
     (with-test-node (node docparser:condition-node "TEST-CONDITION")
-      (is (equal (length (docparser:record-slots node))
-                 1))
+      (is (= (length (docparser:record-slots node))
+             1))
       (let ((first-slot (first (docparser:record-slots node))))
         (is
          (typep first-slot 'docparser:class-slot-node))
         (is
-         (equal (symbol-name (docparser:node-name first-slot))
-                "FIRST-SLOT"))
+         (string= (symbol-name (docparser:node-name first-slot))
+                  "FIRST-SLOT"))
         (is
-         (equal (docparser:node-docstring first-slot)
-                "docstring"))))
+         (string= (docparser:node-docstring first-slot)
+                  "docstring"))))
     (test-node-equality nodes)))
 
 (test method-nodes
@@ -151,13 +151,13 @@
     ;; The `indirectly-define-function` macro
     (with-test-node (node docparser:macro-node "INDIRECTLY-DEFINE-FUNCTION")
       (is
-       (equal (length (docparser:operator-lambda-list node))
-              0)))
+       (= (length (docparser:operator-lambda-list node))
+          0)))
     ;; The `hidden-function` function
     (with-test-node (node docparser:function-node "HIDDEN-FUNCTION")
       (is
-       (equal (length (docparser:operator-lambda-list node))
-              0)))
+       (= (length (docparser:operator-lambda-list node))
+          0)))
     (test-node-equality nodes)))
 
 (test cffi-nodes
@@ -186,16 +186,16 @@
 (test queries
   (let ((*index* (docparser:parse :docparser-test-system)))
     (let ((result (docparser:query *index* :symbol-name "VAR")))
-      (is (equal (length result)
-                 1))
-      (is (equal (docparser:node-docstring (elt result 0))
-                 "docstring")))
+      (is (= (length result)
+             1))
+      (is (string= (docparser:node-docstring (elt result 0))
+                   "docstring")))
     (let ((result (docparser:query *index* :package-name "DOCPARSER-TEST-SYSTEM"
                                            :symbol-name "VAR")))
-      (is (equal (length result)
-                 1))
-      (is (equal (docparser:node-docstring (elt result 0))
-                 "docstring")))))
+      (is (= (length result)
+             1))
+      (is (string= (docparser:node-docstring (elt result 0))
+                   "docstring")))))
 
 (test printing
   (let ((*index* (docparser:parse :docparser-test-system)))
@@ -206,8 +206,8 @@
 
 (test utils
   (is-true (docparser:symbol-external-p 'docparser:render-humanize))
-  (is (equal (docparser:render-humanize 'docparser:render-humanize)
-             "render-humanize")))
+  (is (string= (docparser:render-humanize 'docparser:render-humanize)
+               "render-humanize")))
 
 (def-suite load-systems
   :description "Test docparser on real-world systems.")
