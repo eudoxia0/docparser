@@ -1,7 +1,11 @@
 ;;;; Classes that represent documentation nodes, and some methods
 (in-package :docparser)
 
-(defclass name-node ()
+(defclass node ()
+  ()
+  (:documentation "The base class of all nodes."))
+
+(defclass name-node (node)
   ((form :accessor node-form
          :initarg :form
          :documentation "The original form.")
