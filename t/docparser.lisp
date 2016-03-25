@@ -157,7 +157,7 @@
                  (elt (docparser::index-packages *index*) 0)))
          (current-node 30))
     ;; The `printf` function
-    (incf current-node 2)
+    (incf current-node 3)
     ;; The `size-t` CFFI type
     (with-test-node (node docparser:cffi-type "SIZE-T"))
     ;; The `cstruct` struct
