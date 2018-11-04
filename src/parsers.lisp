@@ -128,10 +128,14 @@ Correctly handles bodies where the first form is a declaration."
                      :name slot)))
 
 (define-parser cl:defclass (name superclasses slots &rest options)
-  (let ((docstring (second (find :documentation options :key #'first))))
+  (let ((docstring (second (find :documentation options :key #'first)))
+        (metaclass (second (find :metaclass options :key #'first)))
+        (default-initargs (cdr (find :default-initargs options :key #'first))))
     (make-instance 'class-node
                    :name name
                    :superclasses superclasses
+                   :metaclass (if metaclass metaclass 'cl:standard-class)
+                   :default-initargs default-initargs
                    :slots (loop for slot in slots collecting
                             (parse-slot slot))
                    :docstring docstring)))
