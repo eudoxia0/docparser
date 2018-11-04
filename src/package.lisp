@@ -55,7 +55,8 @@
            ;; Records and classes
            :record-slots
            :class-node-superclasses
-           :class-node-metaclass)
+           :class-node-metaclass
+           :class-node-default-initargs)
   ;; CFFI accessors
   (:export :cffi-function-return-type
            :cffi-type-base-type
