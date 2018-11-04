@@ -113,6 +113,14 @@ so an initform of NIL can be distinguished from not having an initform at all."
                  :initarg :superclasses
                  :type (proper-list symbol)
                  :documentation "A list of the class's superclasses (symbols).")
+   (metaclass :reader class-node-metaclass
+              :initarg :metaclass
+              :type symbol
+              :documentation "The class's metaclass (symbol).")
+   (default-initargs :reader class-node-default-initargs
+                     :initarg :default-initargs
+                     :type (proper-list)
+                     :documentation "The class's metaclass (symbol).")
    (slots :reader record-slots
           :initarg :slots
           :type (proper-list class-slot-node)

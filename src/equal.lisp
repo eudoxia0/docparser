@@ -58,6 +58,8 @@
 
 (define-equality (a b class-node)
   (and (equal (class-node-superclasses a) (class-node-superclasses b))
+       (equal (class-node-metaclass a) (class-node-metaclass b))
+       (equal (class-node-default-initargs a) (class-node-default-initargs b))
        (every #'node= (record-slots a) (record-slots b))
        (call-next-method)))
 
