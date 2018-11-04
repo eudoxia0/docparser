@@ -54,7 +54,8 @@
            :slot-initform
            ;; Records and classes
            :record-slots
-           :class-node-superclasses)
+           :class-node-superclasses
+           :class-node-metaclass)
   ;; CFFI accessors
   (:export :cffi-function-return-type
            :cffi-type-base-type
