@@ -150,11 +150,23 @@ Correctly handles bodies where the first form is a declaration."
                    :docstring docstring)))
 
 (defun parse-struct-slot (slot)
-  (let ((name (if (listp slot)
-                  (first slot)
-                  slot)))
-    (make-instance 'struct-slot-node
-                   :name name)))
+  (cond ((not (listp slot))
+         (make-instance 'struct-slot-node
+                        :name slot))
+        ((evenp (list-length slot))
+         (destructuring-bind (name initform &key (type t) read-only) slot
+           (let ((node (make-instance 'struct-slot-node
+                                      :name name
+                                      :type type
+                                      :read-only read-only)))
+             (setf (slot-value node 'initform) initform)
+             node)))
+        (t
+         (destructuring-bind (name &key (type t) read-only) slot
+           (make-instance 'struct-slot-node
+                          :name name
+                          :type type
+                          :read-only read-only)))))
 
 (define-parser cl:defstruct (name-and-options &rest slots)
   (let ((name (if (listp name-and-options)

@@ -45,6 +45,8 @@
            ;; Methods
            :method-qualifiers
            ;; Slots
+           :struct-slot-type
+           :struct-slot-read-only
            :slot-accessors
            :slot-readers
            :slot-writers
