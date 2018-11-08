@@ -41,6 +41,13 @@
        (equal (method-qualifiers a) (method-qualifiers b))
        (call-next-method)))
 
+(define-equality (a b struct-slot-node)
+  (and (equal (struct-slot-read-only a) (struct-slot-read-only b))
+       (equal (slot-or-nil a 'type) (slot-or-nil b 'type))
+       (equal (multiple-value-list (slot-initform a))
+              (multiple-value-list (slot-initform b)))
+       (call-next-method)))
+
 (define-equality (a b class-slot-node)
   (and (equal (slot-accessors a) (slot-accessors b))
        (equal (slot-readers a) (slot-readers b))
