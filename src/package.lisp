@@ -57,6 +57,7 @@
            ;; Records and classes
            :record-slots
            :struct-node-conc-name
+           :struct-node-constructor
            :struct-node-copier
            :struct-node-include-name
            :struct-node-include-slots

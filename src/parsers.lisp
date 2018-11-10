@@ -192,6 +192,13 @@ Correctly handles bodies where the first form is a declaration."
                         (cond ((and key conc-name) (symbol-name conc-name))
                               ((and key (not conc-name)) "")
                               (t (concatenate 'string (symbol-name name) "-")))))
+           (constructor (destructuring-bind (&optional key (constructor nil has-constructor-p)
+                                                       args)
+                            (extract-struct-option options :constructor)
+                          (cond ((and has-constructor-p args) (cons constructor args))
+                                ((and has-constructor-p (not args)) constructor)
+                                (t (intern (concatenate 'string "MAKE-" (symbol-name name))
+                                           (symbol-package name))))))
            (copier (destructuring-bind (&optional key (copier nil has-copier-p))
                        (extract-struct-option options :copier)
                      (if has-copier-p
@@ -236,6 +243,7 @@ Correctly handles bodies where the first form is a declaration."
                        :name name
                        :docstring docstring
                        :conc-name conc-name
+                       :constructor constructor
                        :copier copier
                        :initial-offset initial-offset
                        :type type

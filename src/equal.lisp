@@ -62,6 +62,7 @@
 (define-equality (a b struct-node)
   (and (every #'node= (record-slots a) (record-slots b))
        (equal (struct-node-conc-name a) (struct-node-conc-name b))
+       (equal (struct-node-constructor a) (struct-node-constructor b))
        (equal (struct-node-copier a) (struct-node-copier b))
        (equal (struct-node-include-name a) (struct-node-include-name b))
        (every #'node= (struct-node-include-slots a) (struct-node-include-slots b))

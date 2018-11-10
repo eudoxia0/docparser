@@ -121,6 +121,13 @@ so an initform of NIL can be distinguished from not having an initform at all."
               :type string
               :documentation
               "The prefix used for the struct's slot accessors.")
+   (constructor :reader struct-node-constructor
+                :initarg :constructor
+                :type (or symbol proper-list)
+                :documentation
+                "The constructor; which is nil if there is none, the
+                 constructor's symbol, or a list of the boa-constructor's
+                 symbol and arguments.")
    (copier :reader struct-node-copier
            :initarg :copier
            :type symbol
