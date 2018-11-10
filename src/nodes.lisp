@@ -67,7 +67,12 @@
               :initarg :read-only
               :type boolean
               :initform nil
-              :documentation "Whether the slot is readonly or not."))
+              :documentation "Whether the slot is readonly or not.")
+   (accessor :reader struct-slot-accessor
+             :initarg :accessor
+             :initform nil
+             :type symbol
+             :documentation "The slot's accessor."))
   (:documentation "A structure's slot."))
 
 (defclass class-slot-node (documentation-node)
