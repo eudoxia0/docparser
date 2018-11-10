@@ -56,6 +56,14 @@
            :slot-initform
            ;; Records and classes
            :record-slots
+           :struct-node-conc-name
+           :struct-node-copier
+           :struct-node-initial-offset
+           :struct-node-named
+           :struct-node-predicate
+           :struct-node-print-function
+           :struct-node-print-object
+           :struct-node-type
            :class-node-superclasses
            :class-node-metaclass
            :class-node-default-initargs)

@@ -61,6 +61,14 @@
 
 (define-equality (a b struct-node)
   (and (every #'node= (record-slots a) (record-slots b))
+       (equal (struct-node-conc-name a) (struct-node-conc-name b))
+       (equal (struct-node-copier a) (struct-node-copier b))
+       (equal (struct-node-initial-offset a) (struct-node-initial-offset b))
+       (equal (struct-node-named a) (struct-node-named b))
+       (equal (struct-node-predicate a) (struct-node-predicate b))
+       (equal (struct-node-print-function a) (struct-node-print-function b))
+       (equal (struct-node-print-object a) (struct-node-print-object b))
+       (equal (struct-node-type a) (struct-node-type b))
        (call-next-method)))
 
 (define-equality (a b class-node)
