@@ -115,7 +115,62 @@ so an initform of NIL can be distinguished from not having an initform at all."
   ((slots :reader record-slots
           :initarg :slots
           :type (proper-list struct-slot-node)
-          :documentation "A list of slots."))
+          :documentation "A list of slots.")
+   (conc-name :reader struct-node-conc-name
+              :initarg :conc-name
+              :type string
+              :documentation
+              "The prefix used for the struct's slot accessors.")
+   (constructor :reader struct-node-constructor
+                :initarg :constructor
+                :type (or symbol proper-list)
+                :documentation
+                "The constructor; which is nil if there is none, the
+                 constructor's symbol, or a list of the boa-constructor's
+                 symbol and arguments.")
+   (copier :reader struct-node-copier
+           :initarg :copier
+           :type symbol
+           :documentation "The copier function.")
+   (include-name :reader struct-node-include-name
+                 :initarg :include-name
+                 :type symbol
+                 :documentation
+                 "Structure that this one inherits from, if any.")
+   (include-slots :reader struct-node-include-slots
+                  :initarg :include-slots
+                  :type (proper-list struct-slot-node)
+                  :documentation "Included structure slot descriptions.")
+   (initial-offset :reader struct-node-initial-offset
+                   :initarg :initial-offset
+                   :type (or null (integer 0))
+                   :documentation
+                   "The structure's initial offset (integer), or nil if :type
+                    was not given.")
+   (named :reader struct-node-named
+          :initarg :named
+          :type boolean
+          :documentation
+          "Whether the structure is named or not.")
+   (predicate :reader struct-node-predicate
+              :initarg :predicate
+              :type symbol
+              :documentation "The predicate function.")
+   (print-function :reader struct-node-print-function
+                   :initarg :print-function
+                   :type symbol
+                   :documentation
+                   "The print-function function, or nil if there is none.")
+   (print-object :reader struct-node-print-object
+                 :initarg :print-object
+                 :type symbol
+                 :documentation
+                 "The print-object function, or nil if there is none.")
+   (type :reader struct-node-type
+         :initarg :type
+         :type (or null symbol (cons symbol (cons (or symbol list) null)))
+         :documentation
+         "The structure's representation."))
   (:documentation "A structure."))
 
 (defclass class-node (record-node)

@@ -169,20 +169,93 @@ Correctly handles bodies where the first form is a declaration."
                           :read-only read-only)))))
 
 (define-parser cl:defstruct (name-and-options &rest slots)
-  (let ((name (if (listp name-and-options)
-                  (first name-and-options)
-                  name-and-options))
-        (docstring (if (stringp (first slots))
-                       (first slots)
-                       nil))
-        (slots (if (stringp (first slots))
-                   (rest slots)
-                   slots)))
-    (make-instance 'struct-node
-                   :name name
-                   :docstring docstring
-                   :slots (loop for slot in slots collecting
-                            (parse-struct-slot slot)))))
+  ;; Struct options can be bare keywords or be a list with the keyword being
+  ;; the first element. The following function searches for the keyword in
+  ;; either form and if it finds it, returns it in list form with the
+  ;; keyword as the first item (that way one can tell between it and nil).
+  (flet ((extract-struct-option (options key)
+           (let ((entry (find key options
+                              :key
+                              #'(lambda (el) (if (and (listp el) el)
+                                                 (first el)
+                                                 el)))))
+             (if (listp entry)
+                 entry
+                 (list entry)))))
+    (let* ((name (if (listp name-and-options)
+                     (first name-and-options)
+                     name-and-options))
+           (options (when (listp name-and-options)
+                      (rest name-and-options)))
+           (conc-name (destructuring-bind (&optional key conc-name)
+                          (extract-struct-option options :conc-name)
+                        (cond ((and key conc-name) (symbol-name conc-name))
+                              ((and key (not conc-name)) "")
+                              (t (concatenate 'string (symbol-name name) "-")))))
+           (constructor (destructuring-bind (&optional key (constructor nil has-constructor-p)
+                                                       args)
+                            (extract-struct-option options :constructor)
+                          (cond ((and has-constructor-p args) (cons constructor args))
+                                ((and has-constructor-p (not args)) constructor)
+                                (t (intern (concatenate 'string "MAKE-" (symbol-name name))
+                                           (symbol-package name))))))
+           (copier (destructuring-bind (&optional key (copier nil has-copier-p))
+                       (extract-struct-option options :copier)
+                     (if has-copier-p
+                         copier
+                         (intern (concatenate 'string "COPY-" (symbol-name name))
+                                 (symbol-package name)))))
+           (type (destructuring-bind (&optional key type)
+                     (extract-struct-option options :type)
+                   (declare (ignore key))
+                   type))
+           ;; initial-offset must default to 0 if :type was given
+           (initial-offset (destructuring-bind (&optional key initial-offset)
+                               (extract-struct-option options :initial-offset)
+                             (declare (ignore key))
+                             (cond (initial-offset initial-offset)
+                                   (type 0))))
+           (named (or (not type) (when (extract-struct-option options :named) t)))
+           (predicate (destructuring-bind (&optional key (predicate nil has-predicate-p))
+                          (extract-struct-option options :predicate)
+                        (if has-predicate-p
+                            predicate
+                            (intern (concatenate 'string (symbol-name name) "-P")
+                                    (symbol-package name)))))
+           (print-function (destructuring-bind (&optional key print-function)
+                               (extract-struct-option options :print-function)
+                             (declare (ignore key))
+                             print-function))
+           (print-object (destructuring-bind (&optional key print-object)
+                             (extract-struct-option options :print-object)
+                           (declare (ignore key))
+                           print-object))
+           (docstring (if (stringp (first slots))
+                          (first slots)
+                          nil))
+           (slots (if (stringp (first slots))
+                      (rest slots)
+                      slots)))
+      (destructuring-bind (&optional key include-name &rest include-slots)
+          (extract-struct-option options :include)
+        (declare (ignore key))
+        (make-instance 'struct-node
+                       :name name
+                       :docstring docstring
+                       :conc-name conc-name
+                       :constructor constructor
+                       :copier copier
+                       :initial-offset initial-offset
+                       :type type
+                       :named named
+                       :predicate predicate
+                       :print-function print-function
+                       :print-object print-object
+                       :include-name include-name
+                       :include-slots (loop for slot in include-slots collecting
+                                           (parse-struct-slot slot))
+                       :slots (loop for slot in slots collecting
+                                   (parse-struct-slot slot)))))))
 
 ;;; CFFI parsers
 
