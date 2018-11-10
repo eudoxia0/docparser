@@ -125,6 +125,15 @@ so an initform of NIL can be distinguished from not having an initform at all."
            :initarg :copier
            :type symbol
            :documentation "The copier function.")
+   (include-name :reader struct-node-include-name
+                 :initarg :include-name
+                 :type symbol
+                 :documentation
+                 "Structure that this one inherits from, if any.")
+   (include-slots :reader struct-node-include-slots
+                  :initarg :include-slots
+                  :type (proper-list struct-slot-node)
+                  :documentation "Included structure slot descriptions.")
    (initial-offset :reader struct-node-initial-offset
                    :initarg :initial-offset
                    :type (or null (integer 0))

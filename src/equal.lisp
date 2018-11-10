@@ -63,6 +63,8 @@
   (and (every #'node= (record-slots a) (record-slots b))
        (equal (struct-node-conc-name a) (struct-node-conc-name b))
        (equal (struct-node-copier a) (struct-node-copier b))
+       (equal (struct-node-include-name a) (struct-node-include-name b))
+       (every #'node= (struct-node-include-slots a) (struct-node-include-slots b))
        (equal (struct-node-initial-offset a) (struct-node-initial-offset b))
        (equal (struct-node-named a) (struct-node-named b))
        (equal (struct-node-predicate a) (struct-node-predicate b))

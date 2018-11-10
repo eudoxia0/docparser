@@ -229,19 +229,25 @@ Correctly handles bodies where the first form is a declaration."
            (slots (if (stringp (first slots))
                       (rest slots)
                       slots)))
-      (make-instance 'struct-node
-                     :name name
-                     :docstring docstring
-                     :conc-name conc-name
-                     :copier copier
-                     :initial-offset initial-offset
-                     :type type
-                     :named named
-                     :predicate predicate
-                     :print-function print-function
-                     :print-object print-object
-                     :slots (loop for slot in slots collecting
-                                 (parse-struct-slot slot))))))
+      (destructuring-bind (&optional key include-name &rest include-slots)
+          (extract-struct-option options :include)
+        (declare (ignore key))
+        (make-instance 'struct-node
+                       :name name
+                       :docstring docstring
+                       :conc-name conc-name
+                       :copier copier
+                       :initial-offset initial-offset
+                       :type type
+                       :named named
+                       :predicate predicate
+                       :print-function print-function
+                       :print-object print-object
+                       :include-name include-name
+                       :include-slots (loop for slot in include-slots collecting
+                                           (parse-struct-slot slot))
+                       :slots (loop for slot in slots collecting
+                                   (parse-struct-slot slot)))))))
 
 ;;; CFFI parsers
 

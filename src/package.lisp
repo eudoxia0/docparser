@@ -58,6 +58,8 @@
            :record-slots
            :struct-node-conc-name
            :struct-node-copier
+           :struct-node-include-name
+           :struct-node-include-slots
            :struct-node-initial-offset
            :struct-node-named
            :struct-node-predicate
