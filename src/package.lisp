@@ -47,6 +47,7 @@
            ;; Slots
            :struct-slot-type
            :struct-slot-read-only
+           :struct-slot-accessor
            :slot-accessors
            :slot-readers
            :slot-writers

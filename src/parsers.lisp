@@ -149,24 +149,32 @@ Correctly handles bodies where the first form is a declaration."
                             (parse-slot slot))
                    :docstring docstring)))
 
-(defun parse-struct-slot (slot)
-  (cond ((not (listp slot))
-         (make-instance 'struct-slot-node
-                        :name slot))
-        ((evenp (list-length slot))
-         (destructuring-bind (name initform &key (type t) read-only) slot
-           (let ((node (make-instance 'struct-slot-node
-                                      :name name
-                                      :type type
-                                      :read-only read-only)))
-             (setf (slot-value node 'initform) initform)
-             node)))
-        (t
-         (destructuring-bind (name &key (type t) read-only) slot
+(defun parse-struct-slot (slot &optional conc-name package)
+  (let ((accessor (when conc-name
+                    (intern (concatenate 'string conc-name (symbol-name (if (listp slot)
+                                                                            (first slot)
+                                                                            slot)))
+                            package))))
+    (cond ((not (listp slot))
            (make-instance 'struct-slot-node
-                          :name name
-                          :type type
-                          :read-only read-only)))))
+                          :name slot
+                          :accessor accessor))
+          ((evenp (list-length slot))
+           (destructuring-bind (name initform &key (type t) read-only) slot
+             (let ((node (make-instance 'struct-slot-node
+                                        :name name
+                                        :type type
+                                        :read-only read-only
+                                        :accessor accessor)))
+               (setf (slot-value node 'initform) initform)
+               node)))
+          (t
+           (destructuring-bind (name &key (type t) read-only) slot
+             (make-instance 'struct-slot-node
+                            :name name
+                            :type type
+                            :read-only read-only
+                            :accessor accessor))))))
 
 (define-parser cl:defstruct (name-and-options &rest slots)
   ;; Struct options can be bare keywords or be a list with the keyword being
@@ -255,7 +263,7 @@ Correctly handles bodies where the first form is a declaration."
                        :include-slots (loop for slot in include-slots collecting
                                            (parse-struct-slot slot))
                        :slots (loop for slot in slots collecting
-                                   (parse-struct-slot slot)))))))
+                                   (parse-struct-slot slot conc-name (symbol-package name))))))))
 
 ;;; CFFI parsers
 

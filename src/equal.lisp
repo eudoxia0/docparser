@@ -46,6 +46,7 @@
        (equal (slot-or-nil a 'type) (slot-or-nil b 'type))
        (equal (multiple-value-list (slot-initform a))
               (multiple-value-list (slot-initform b)))
+       (equal (struct-slot-accessor a) (struct-slot-accessor b))
        (call-next-method)))
 
 (define-equality (a b class-slot-node)
