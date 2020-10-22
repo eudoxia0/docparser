@@ -141,10 +141,13 @@ Correctly handles bodies where the first form is a declaration."
                    :docstring docstring)))
 
 (define-parser cl:define-condition (name superclasses slots &rest options)
-  (let ((docstring (second (find :documentation options :key #'first))))
+  (let ((docstring (second (find :documentation options :key #'first)))
+        (default-initargs (cdr (find :default-initargs options :key #'first))))
     (make-instance 'condition-node
                    :name name
                    :superclasses superclasses
+                   :metaclass (class-name (class-of (find-class 'condition)))
+                   :default-initargs default-initargs
                    :slots (loop for slot in slots collecting
                             (parse-slot slot))
                    :docstring docstring)))
