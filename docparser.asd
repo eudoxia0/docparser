@@ -24,3 +24,16 @@
   #.(uiop:read-file-string
      (uiop:subpathname *load-pathname* "README.md"))
   :in-order-to ((test-op (test-op docparser-test))))
+
+(defsystem "docparser/corrector"
+  :author "Mykola Matvyeyev <mnasoft@gmail.com>"
+  :maintainer "Mykola Matvyeyev <mnasoft@gmail.com>"
+  :license "MIT"
+  :version "0.0.1"
+  :depends-on ("docparser")
+  :components ((:module "src/corrector"
+                :serial t
+                :components
+                ((:file "corrector"))))
+  :description "Parses documentation from Common Lisp systems after
+  they have been fully loaded into memory.")
