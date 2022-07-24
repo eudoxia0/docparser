@@ -1,0 +1,5 @@
+* ToDo
+1. [ ] Make tests.
+2. [ ] Define metod correct for:
+   - [ ] (defmethod correct ((node DOCPARSER:STRUCT-SLOT-NODE)) nil)
+   - [ ] (defmethod correct ((node DOCPARSER:CLASS-SLOT-NODE)) nil)
