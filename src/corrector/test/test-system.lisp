@@ -94,7 +94,7 @@
 
 (setf
  (documentation (find-slot second-slot test-class) t)
- "coorrected first docstring: second-slot")
+ "coorrected second docstring: second-slot")
 
 (define-condition test-condition ()
   ((first-slot :accessor first-slot
