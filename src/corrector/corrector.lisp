@@ -6,17 +6,6 @@
 
 (in-package :docparser/corrector)
 
-(defparameter *index* nil)
-
-(defun make-index (system)
-  (setf *index* (docparser:parse system)))
-
-(defun access (package-no oject-no)
-  (aref
-   (docparser::package-index-nodes
-    (aref (docparser::index-packages *index*) package-no))
-   oject-no))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; correct
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -99,6 +88,17 @@
          (setfp (slot-value node 'docparser::setfp))
          (qualifiers (slot-value node 'docparser::qualifiers))
          (specializers
+           (let ((rez nil)
+                 (add t))
+             (loop :for i :in (slot-value node 'docparser::lambda-list)
+                   :do (progn
+                         (when (or
+                                (eq i '&key)
+                                (eq i '&allow-other-keys)
+                                (eq i '&optional))
+                           (setf add nil))
+                         (when add (push (if (consp i) (second i) t) rez))))
+             (nreverse rez))
            (mapcar #'(lambda(el)
                        (if (consp el) (second el) t))
                    (slot-value node 'docparser::lambda-list))))
@@ -142,10 +142,7 @@
                                (docparser::package-index-nodes
                                 package)
                                n)))
-                        #+nil(break "~S ~S~%" package node)  
-                        (format t "~S ~S~%"
-                                package
-                                node)
+                        (format t "~S ~S ~S~%" p n node)
                         (correct node)))))
   index)
 
@@ -154,14 +151,3 @@
   (correct-all
    (docparser:parse system-or-list)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+nil
-(
- (make-index :docparser/corrector/test)
- (docparser:dump docparser/corrector::*index*)
-
- (docparser/corrector::correct (docparser/corrector::access 0 13))
- (docparser/corrector::correct-all)
- )
-
-(parse :docparser/corrector/test)
