@@ -99,3 +99,7 @@
 (cffi:defcenum nums "docstring" :a :b (:c 3))
 
 (cffi:defbitfield bits "docstring" :a :b (:c #x0200))
+
+(cffi:defcfun (printf-without-docstring "printf") :int
+  (control :string) &rest)
+
