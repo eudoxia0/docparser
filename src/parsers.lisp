@@ -279,7 +279,7 @@ Correctly handles bodies where the first form is a declaration."
                        nil))
         (args (if (stringp (first args))
                   (rest args)
-                  nil)))
+                  args)))
     (make-instance 'cffi-function
                    :name name
                    :docstring docstring

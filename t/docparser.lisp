@@ -183,6 +183,21 @@
                  (list :a :b :c))))
     (test-node-equality nodes)))
 
+(test cffi-function-without-docstring
+  (let* ((index (docparser:parse :docparser-test-system))
+         (nodes (docparser:query index
+                                 :package-name :docparser-test-system
+                                 :symbol-name '#:printf-without-docstring))
+         (func (find 'docparser:cffi-function nodes :key 'type-of)))
+    (is (equal (docparser:operator-lambda-list func)
+               '((docparser-test-system::control :string) &rest)))
+    (is (equal (docparser:node-name func)
+               'docparser-test-system::printf-without-docstring))
+    (is (equal (docparser:cffi-function-return-type func)
+               :int))
+    (is (null (docparser:node-docstring func)))
+    (is (not (docparser:operator-setf-p func)))))
+
 (test queries
   (let ((*index* (docparser:parse :docparser-test-system)))
     (let ((result (docparser:query *index* :symbol-name "VAR")))
