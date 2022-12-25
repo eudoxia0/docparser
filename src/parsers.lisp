@@ -271,20 +271,20 @@ Correctly handles bodies where the first form is a declaration."
 ;;; CFFI parsers
 
 (define-parser cffi:defcfun (name-and-options return-type &rest args)
-  (let ((name (if (listp name-and-options)
-                  (first (remove-if-not #'symbolp name-and-options))
-                  name-and-options))
-        (docstring (if (stringp (first args))
-                       (first args)
-                       nil))
-        (args (if (stringp (first args))
-                  (rest args)
-                  args)))
-    (make-instance 'cffi-function
-                   :name name
-                   :docstring docstring
-                   :return-type return-type
-                   :lambda-list args)))
+  (multiple-value-bind (lisp-name foreign-name)
+      (cffi::parse-name-and-options name-and-options)
+    (let ((docstring (if (stringp (first args))
+                         (first args)
+                         nil))
+          (args (if (stringp (first args))
+                    (rest args)
+                    args)))
+      (make-instance 'cffi-function
+                     :name lisp-name
+                     :foreign-name foreign-name
+                     :docstring docstring
+                     :return-type return-type
+                     :lambda-list args))))
 
 (define-parser cffi:defctype (name base-type &optional docstring)
   (make-instance 'cffi-type
