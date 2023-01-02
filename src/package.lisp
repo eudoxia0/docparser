@@ -72,7 +72,8 @@
            :class-node-metaclass
            :class-node-default-initargs)
   ;; CFFI accessors
-  (:export :cffi-function-return-type
+  (:export :cffi-function-foreign-name
+           :cffi-function-return-type
            :cffi-type-base-type
            :cffi-slot-type
            :cffi-struct-slots

@@ -193,6 +193,8 @@
                '((docparser-test-system::control :string) &rest)))
     (is (equal (docparser:node-name func)
                'docparser-test-system::printf-without-docstring))
+    (is (equal (docparser:cffi-function-foreign-name func)
+               "printf"))
     (is (equal (docparser:cffi-function-return-type func)
                :int))
     (is (null (docparser:node-docstring func)))

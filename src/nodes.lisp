@@ -213,7 +213,11 @@ so an initform of NIL can be distinguished from not having an initform at all."
  inherit from documentation-node as not all sub-nodes have docstrings."))
 
 (defclass cffi-function (cffi-node function-node)
-  ((return-type :reader cffi-function-return-type
+  ((foreign-name :reader cffi-function-foreign-name
+                 :initarg :foreign-name
+                 :type string
+                 :documentation "The function's foreign name.")
+   (return-type :reader cffi-function-return-type
                 :initarg :return-type
                 :documentation "The function's return type."))
   (:documentation "A C function."))
