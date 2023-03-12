@@ -174,3 +174,4 @@
   (correct-all
    (docparser:parse system-or-list)))
 
+(format t "~2%Corrector - loaded~2%")
