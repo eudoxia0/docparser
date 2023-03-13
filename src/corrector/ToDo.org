@@ -1,0 +1,8 @@
+* ToDo
+1. [ ] Make tests.
+
+* Done
+1. [X] Define metod correct for:
+   - [X] (defmethod correct ((node DOCPARSER:STRUCT-SLOT-NODE)) nil) -
+     have no sence. Structure slots have not documentation.
+   - [X] (defmethod correct ((node DOCPARSER:CLASS-SLOT-NODE)) nil)
